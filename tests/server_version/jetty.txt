@@ -1,0 +1,13 @@
+[request]
+GET / HTTP/1.1
+Host: 127.0.0.1:9090
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:89.0) Gecko/20100101 Firefox/89.0
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+[response]
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Thu, 03 Apr 2014 07:42:33 GMT
+Content-Length: 1350
+Server: Jetty(9.2.9.v20150224)

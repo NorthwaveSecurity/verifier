@@ -1,0 +1,57 @@
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-03-15 08:50 CET
+Nmap scan report for dns.google (8.8.8.8)
+Host is up (0.069s latency).
+
+PORT   STATE SERVICE
+53/udp open  domain
+| dns-cache-snoop: 48 of 100 tested domains are cached.
+| google.com
+| www.google.com
+| facebook.com
+| www.facebook.com
+| www.youtube.com
+| yahoo.com
+| www.yahoo.com
+| baidu.com
+| www.baidu.com
+| wikipedia.org
+| www.wikipedia.org
+| amazon.com
+| www.amazon.com
+| www.qq.com
+| live.com
+| www.live.com
+| www.linkedin.com
+| twitter.com
+| www.twitter.com
+| taobao.com
+| bing.com
+| www.bing.com
+| yahoo.co.jp
+| www.yahoo.co.jp
+| yandex.ru
+| www.yandex.ru
+| wordpress.com
+| www.wordpress.com
+| vk.com
+| www.vk.com
+| ebay.com
+| tumblr.com
+| www.tumblr.com
+| msn.com
+| www.msn.com
+| www.ask.com
+| mail.ru
+| www.google.fr
+| pinterest.com
+| microsoft.com
+| www.microsoft.com
+| xvideos.com
+| www.xvideos.com
+| paypal.com
+| www.paypal.com
+| imdb.com
+| apple.com
+|_www.conduit.com
+
+Nmap done: 1 IP address (1 host up) scanned in 6.23 seconds

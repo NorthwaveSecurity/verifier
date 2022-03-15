@@ -1,0 +1,177 @@
+= Verifier
+
+Automatically verify issues
+
+== Setup
+
+Make sure that python 3.10 or higher is installed (this application uses functools.cache).
+
+    pip install -e .
+
+== Usage
+
+=== CLI
+
+----
+verifier --help
+verifier verify -i dns-cache-snoop -t 8.8.8.8
+verifier verify -l nl -i dns-cache-snoop -t 8.8.8.8
+verifier verify -i all-missing-headers -t example.com
+verifier verify -i cors -t example.com -c request-response.txt
+verifier verify -i all-missing-headers -t example.com -c request-response.txt
+verifier verify -i x-xss-protection x-frame-options -t https://example.com
+verifier -p <dradis_project_id> verify -i x-xss-protection -t https://example.com
+----
+
+Export
+----
+verifier -p <dradis_project_id> verify -x output.json -i x-xss-protection -t https://example.com
+----
+
+Import
+----
+verifier import output.json
+verifier -p <dradis_project_id> import output.json
+----
+
+==== Content
+
+For some issues a file with content can be provided or is required, for example for `cors`. This file has the following format:
+
+```
+[key]
+value
+value continued
+value continued
+[key1]
+value1
+value1 continued
+value1 continued
+```
+
+Example:
+
+```
+[request]
+GET / HTTP/1.1
+[response]
+HTTP 200 OK
+...
+```
+
+The variables are read into a dictionary which is accessible to the issues as `self.content`.
+
+If no key is provided, the content is available under the key `content`.
+
+==== Extra arguments
+
+Extra arguments passed to verifier are sometimes passed to subcommands, this behaviour is issue-dependent.
+For example, for curl, the following works to add authentication to a curl command:
+
+----
+verifier verify -i curl -t google.com --basic -u test:test
+#[Description]#
+The following curl command shows that TODO.
+
+bc.. $ curl --basic -u test:test https://google.com
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>301 Moved</TITLE></HEAD><BODY>
+<H1>301 Moved</H1>
+The document has moved
+<A HREF="https://www.google.com/">here</A>.
+</BODY></HTML>
+
+
+p. TODO.
+----
+
+
+=== Start test
+
+The start_test script tests a set of standard issues and imports them into a given dradis project
+
+Usage:
+
+----
+start_test --help
+start_test -p <dradis_project_id> example.com
+start_test -p <dradis_project_id> -l nl example.com
+----
+
+Export
+----
+start_test -x output.json example.com
+----
+
+Importing can be done using verifier.py.
+
+=== Module
+
+----
+from verifier import verify
+evidence_text = verify(<issues>, <target>, *args, **kwargs)
+----
+
+=== Dradis curl
+
+Do a web request and print it in dradis issue format.
+
+----
+dradis_curl -h
+----
+
+== Dradis support
+
+    pip install -e ".[dradis]"
+
+Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values
+
+Currently none of the included issues have Dradis support. To add this, add a `_standard_issue_id` attribute to the issue class like the following:
+
+----
+class Issue:
+    ...
+    _standard_issue_id = {
+        # Number of the issue in Dradis Issue Library add-on
+        "en": 1, 
+        "nl": 2,
+    }
+----
+
+== Extending
+
+To create a new issue create a new file in the `issues` directory, this file should have content like the following:
+
+----
+from .base import add_issue, Issue
+
+class NewIssue(Issue):
+    # This template is later converted to language-specific using self.template
+    _template = {
+        "en": "English template ...",
+        "nl": "Dutch template ...",
+    }
+    _standard_issue_id = {
+        # Number of the issue in Dradis Issue Library add-on
+        "en": 1, 
+        "nl": 2,
+    }
+
+    def verify(self, host):
+        ...
+        yield self.template.format(...)
+
+add_issue('new-issue', NewIssue)
+----
+
+Then in `issues/__init__.py` add a line like the following:
+
+----
+from . import new_issue
+----
+
+== Testing
+
+```
+python -m unittest discover tests
+```

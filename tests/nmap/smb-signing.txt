@@ -1,0 +1,29 @@
+Starting Nmap 7.60 ( https://nmap.org ) at 2017-11-04 14:20 CET
+Nmap scan report for 192.168.60.2
+Host is up (1.0s latency).
+Not shown: 994 closed ports
+PORT     STATE SERVICE     VERSION
+445/tcp  open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+Service Info: Hosts: LAZYSYSADMIN, Admin.local; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 59m57s, deviation: 0s, median: 59m57s
+|_nbstat: NetBIOS name: LAZYSYSADMIN, NetBIOS user: , NetBIOS MAC:  (unknown)
+| smb-os-discovery:
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: lazysysadmin
+|   NetBIOS computer name: LAZYSYSADMIN\x00
+|   Domain name: \x00
+|   FQDN: lazysysadmin
+|_  System time: 2017-11-05T00:22:19+10:00
+| smb-security-mode:
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode:
+|   2.02:
+|_    Message signing enabled but not required
+| smb2-time:
+|   date: 2017-11-04 15:22:19
+|_  start_date: 1601-01-01 00:53:28

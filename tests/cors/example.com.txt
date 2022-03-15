@@ -1,0 +1,28 @@
+[request]
+GET /api HTTP/1.1
+Host: example.com
+User-Agent: Issue verifier
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Origin: somepage.com
+[response]
+HTTP/1.1 200 OK
+Date: Tue, 15 Mar 2022 08:21:50 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin
+Access-Control-Allow-Origin: *
+Last-Modified: Fri, 18 Dec 2020 17:46:16 GMT
+Cache-Control: public, max-age=43200
+Expires: Tue, 15 Mar 2022 20:21:50 GMT
+ETag: "1608313576.82-739-2236028454-gzip"
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Type: text/html; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Transfer-Encoding: chunked

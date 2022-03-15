@@ -1,0 +1,13 @@
+Nmap scan report for 10.10.10.100
+Host is up, received user-set (0.064s latency).
+Scanned at 2021-05-02 18:18:25 EEST for 603s
+Not shown: 65512 closed ports
+Reason: 65512 resets
+PORT      STATE SERVICE       REASON          VERSION
+53/tcp    open  domain        syn-ack ttl 127 Microsoft DNS 6.1.7601 (1DB15D39) (Windows Server 2008 R2 SP1)
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15D39)
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows_server_2008:r2:sp1, cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun May  2 18:28:28 2021 -- 1 IP address (1 host up) scanned in 604.40 seconds
