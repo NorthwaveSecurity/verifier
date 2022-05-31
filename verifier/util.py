@@ -4,10 +4,12 @@ from . import templates
 
 
 SNIP = '--snip--'
+HIGHLIGHT_START = r"$${{"
+HIGHLIGHT_END = r"}}$$"
 
 
 def highlight(string, regex):
-    return re.sub(regex, r"$${{\g<0>}}$$", string)
+    return re.sub(regex, HIGHLIGHT_START + r"\g<0>" + HIGHLIGHT_END, string)
 
 
 def prepend_command(command, output, sudo=False):
