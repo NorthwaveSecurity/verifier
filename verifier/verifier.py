@@ -2,6 +2,7 @@
 from dataclasses import dataclass, asdict
 import json
 import logging
+import sys
 from .issues import issues, expansions
 from .util import IssueDoesNotExist
 from .config import config
@@ -14,12 +15,12 @@ printed_evidence = False
 def print_output(output_str, issue_id=None):
     global printed_evidence
     if printed_evidence:
-        print('=========================')
+        print('=========================', file=sys.stderr)
     else:
         printed_evidence = True
     if issue_id:
-        print(issue_id)
-        print('-------------------------')
+        print(issue_id, file=sys.stderr)
+        print('-------------------------', file=sys.stderr)
     print(output_str)
 
 
