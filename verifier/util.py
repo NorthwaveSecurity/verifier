@@ -17,8 +17,8 @@ def prepend_command(command, output, sudo=False):
 def run_command(command, visual_command=None, sudo=False, do_prepend_command=True):
     if sudo:
         command = ["sudo"] + command
-    output = subprocess.check_output(command, stderr=subprocess.DEVNULL)
-    output = output.replace(b'\r', b'').decode('utf-8')
+    result = subprocess.run(command, capture_output=True)
+    output = result.stdout.replace(b'\r', b'').decode('utf-8')
     if do_prepend_command:
         output = prepend_command(visual_command or command, output, sudo=sudo)
     return output
