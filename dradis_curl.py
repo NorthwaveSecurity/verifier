@@ -31,7 +31,7 @@ class Request(RequestResponse):
         self._req = req
         self.body = body
 
-        if req:
+        if req is not None:
             # Cut off protocol part
             split_url = self._req.url.split("/")
             self.url = '/' + '/'.join(split_url[3:])
@@ -56,7 +56,7 @@ class Response(RequestResponse):
         self._resp = resp
         self.body = body
 
-        if resp:
+        if resp is not None:
             self.req = Request(req=resp.request, body=body)
             self.headers_string = 'HTTP/1.1 {} {}\r\n{}\r\n\r\n'.format(
                 self.status_code, self.reason,
