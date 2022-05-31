@@ -12,6 +12,7 @@ from . import cookie_flags
 from . import stack_trace
 from . import path_disclosure
 from . import portscan
+from . import sslyze
 from .base import Issue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
