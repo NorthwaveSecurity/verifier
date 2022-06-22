@@ -6,6 +6,30 @@ from ..util import host_to_url, highlight, IssueDoesNotExist
 class MissingHeader(DradisCurlIssue):
     header = None
     allow_redirects = None
+    _footer = {
+        "en": "Missing header: {}",
+        "nl": "Ontbrekende header: {}"
+    }
+    _template = {
+        "en": """p. Request:
+        
+bc.. {}
+
+p. Response:
+
+bc.. {}
+
+p. {}.""",
+        "nl": """p. Request:
+        
+bc.. {}
+
+p. Response:
+
+bc.. {}
+
+p. {}.""",
+    }
 
     def check_header(self, response):
         return self.header and self.header in response.headers
@@ -15,8 +39,13 @@ class MissingHeader(DradisCurlIssue):
         allow_redirects = self.allow_redirects if self.allow_redirects is not None else self.parsed_args.allow_redirects
         return super().do_request(url, body=False, allow_redirects=allow_redirects)
 
+    def footer(self, _footer=None):
+        if not _footer:
+            _footer = self._footer
+        return _footer[self.language].format(self.header or "mentioned")
+
     def format_template(self, request, response):
-        return self.template.format(request, response, self.header or "mentioned")
+        return self.template.format(request, response, self.footer())
 
     def verify(self, url):
         request, response = self.do_request(url)
@@ -51,16 +80,51 @@ class StrictTransportSecurity(MissingHeader):
 
 class ContentSecurityPolicy(MissingHeader):
     header = 'Content-Security-Policy'
+    _footer_unsafe = {
+        "en": "This shows that the {} header contains unsafe directives",
+        "nl": "Dit laat zien dat de {} header unsafe directives bevat"
+    }
+    _footer_frame_ancestors = {
+        "en": "This shows that the 'frame-ancestors' directive in the {} header is not set correctly",
+        "nl": "Dit toont aan dat het 'frame-ancestors' directive in de {} header niet correct is ingesteld"
+    }
+    header_present = False
+    problem = None
+
+    def check_frame_ancestors(self, response):
+        header = response.headers.get(self.header)
+        for part in header.split(';'):
+            key, _, value = part.strip().partition(' ')
+            if key == 'frame-ancestors' and ("'none'" in value or "'self'" in value):
+                return True
+        return False
+
+    def footer(self):
+        match self.problem:
+            case "unsafe":
+                return super().footer(self._footer_unsafe)
+            case "frame_ancestors":
+                return super().footer(self._footer_frame_ancestors)
+            case "missing":
+                return super().footer(self._footer)
 
     def verify(self, url):
         request, response = self.do_request(url)
         triggers = ['unsafe-inline', 'unsafe-eval']
         if self.check_header(response):
+            self.header_present = True
             if any([t in response.headers.get(self.header) for t in triggers]):
-                response = highlight(str(response), '|'.join(triggers))
-            else:
-                raise IssueDoesNotExist()
-        yield self.format_template(request, response)
+                response_str = highlight(str(response), '|'.join(triggers))
+                self.problem = "unsafe"
+                yield self.format_template(request, response_str)
+            if not self.check_frame_ancestors(response):
+                self.problem = "frame_ancestors"
+                yield self.format_template(request, response)
+        else:
+            self.problem = "missing"
+            yield self.format_template(request, response)
+        if not self.problem:
+            raise IssueDoesNotExist()
 
     @property
     def description(self):
@@ -76,7 +140,6 @@ add_issue('missing-header', MissingHeader)
 
 add_expansion('all-missing-headers', [
     'x-xss-protection',
-    'x-frame-options',
     'x-content-type-options',
     'strict-transport-security',
     'content-security-policy',
