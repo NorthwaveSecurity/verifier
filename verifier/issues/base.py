@@ -5,6 +5,7 @@ from collections import defaultdict
 class Issue:
     description = None
     _template = defaultdict(lambda: "{}")
+    _standard_issue_path = defaultdict(lambda: None)
 
     def __init__(self, language="en", content=None, extra_args=None, proxy=None):
         self.language = language
@@ -39,19 +40,20 @@ class Issue:
         """
         return output
 
-    def prepend_description(self, template):
-        return "#[Description]#\n" + template
-
     def handle_proxy(self, proxy):
         raise NotImplementedError
 
     @property
     def template(self):
-        return self.prepend_description(self._template[self.language])
+        return self._template[self.language]
 
     @property
     def standard_issue_id(self):
         return self._standard_issue_id[self.language]
+
+    @property
+    def standard_issue_path(self):
+        return self._standard_issue_path.get(self.language)
 
 
 class CommandIssue(Issue):

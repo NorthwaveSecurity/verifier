@@ -16,5 +16,6 @@ setup(name='Verifier',
       scripts=['start_test'],
       extras_require={
           "dradis": "dradis-api @ git+https://github.com/NorthwaveSecurity/dradis-api.git",
+          'reporter': 'reporter @ git+https://github.com/JJK96/reporter.git',
       }
       )
