@@ -20,3 +20,12 @@ add_expansion('all', [
     'server-version',
     'dnssec',
 ])
+
+def get_issue(id, lang="en", content=None, extra_args=None, **kwargs):
+    try:
+        issue_class = issues[id.lower()]
+        return issue_class(language=lang, content=content, extra_args=extra_args, **kwargs)
+    except KeyError:
+        raise ValueError(f"Issue {id} does not exist.")
+
+
