@@ -26,30 +26,16 @@ def print_output(output_str, issue_id=None):
     print(output_str)
 
 
-def create_dradis_issue(project_id, standard_issue_id, host, evidence):
-    from dradis import Dradis
-    api_token = config['DEFAULT']['api_token']
-    url = config['DEFAULT']['url']
-    dradis = Dradis(api_token, url)
-    standard_issue = dradis.get_standard_issue(standard_issue_id)
-    issue = dradis.get_issue_by_title(standard_issue['title'], project_id)
-    if not issue:
-        issue = dradis.create_issue(project_id, standard_issue['content'])
-    node = dradis.get_or_create_node(project_id, host)
-    dradis.create_evidence(project_id, node['id'], issue['id'], evidence)
-    logging.info("Issue successfully created in dradis")
-
-
 @dataclass
 class Evidence:
     id: int
     host: 'typing.Any'
     output: str
     lang: str = "en"
-    dradis_node: str = None
+    label: str = None
 
 
-def get_evidence_host(id, host, lang="en", content=None, extra_args=None, dradis_node=None, **kwargs):
+def get_evidence_host(id, host, lang="en", content=None, extra_args=None, label=None, **kwargs):
     issue = get_issue(id, lang=lang, content=content, extra_args=extra_args, **kwargs)
     if isinstance(host, dict):
         outputs = issue.verify(**host)
@@ -60,31 +46,28 @@ def get_evidence_host(id, host, lang="en", content=None, extra_args=None, dradis
         yield Evidence(
             id=id,
             host=host,
-            dradis_node=dradis_node,
+            label=label,
             output=output,
             lang=lang,
         )
 
 
-def process_evidence(evidence: Evidence, dradis_project_id=None, evidence_saver=None):
+def process_evidence(evidence: Evidence, evidence_saver=None):
     print_output(evidence.output, evidence.id)
-    if dradis_project_id:
-        issue = get_issue(evidence.id, lang=evidence.lang)
-        create_dradis_issue(dradis_project_id, issue.standard_issue_id, evidence.dradis_node or evidence.host, evidence.output)
     if evidence_saver:
         evidence_saver.save_evidence(evidence)
 
 
-def verify_host(id, host, save=None, dradis_project_id=None, dradis_node=None, lang="en", export_file=None, content=None, extra_args=None, **kwargs):
+def verify_host(id, host, save=None, label=None, lang="en", export_file=None, content=None, extra_args=None, **kwargs):
     if save is not None:
         evidence_saver = evidence_savers.get(save)
         extra_args = evidence_saver.parse_args(extra_args)
     else:
         evidence_saver = None
     try:
-        evidences = get_evidence_host(id, host, lang=lang, content=content, extra_args=extra_args, dradis_node=dradis_node, **kwargs)
+        evidences = get_evidence_host(id, host, lang=lang, content=content, extra_args=extra_args, label=label, **kwargs)
         for evidence in evidences:
-            process_evidence(evidence, dradis_project_id=dradis_project_id, evidence_saver=evidence_saver)
+            process_evidence(evidence, evidence_saver=evidence_saver)
             yield evidence
     except IssueDoesNotExist:
         print_output("Issue {} does not exist for {}".format(id, host))
@@ -171,8 +154,7 @@ def main():
                     args.issue,
                     args.target,
                     save=save,
-                    dradis_project_id=args.dradis_project,
-                    dradis_node=args.dradis_node,
+                    label=args.label,
                     lang=args.lang,
                     proxy=args.proxy,
                     content=content,
@@ -185,7 +167,7 @@ def main():
     def import_caller(args, extra_args):
         evidences = import_evidences(args.import_file)
         for evidence in evidences:
-            process_evidence(evidence, dradis_project_id=args.dradis_project)
+            process_evidence(evidence)
 
     parser = argparse.ArgumentParser(description="Generate evidence for standard issues")
     subparsers = parser.add_subparsers(dest="command", metavar="command", required=True)
@@ -195,7 +177,7 @@ def main():
     verify_parser.add_argument("-x", "--export-file", help="Export results to file for later import")
     verify_parser.add_argument("-l", "--lang", choices=["en", "nl"], default="en", help="Reporting language")
     verify_parser.add_argument("-c", "--content", help="File with content for the evidences, e.g. request, response, in the format described in the README")
-    verify_parser.add_argument("-n", "--dradis_node", help="Dradis node to register the issue under")
+    verify_parser.add_argument("-L", "--label", help="Different label for the location in the issue")
     verify_parser.add_argument("-s", "--save", nargs='?', default=argparse.SUPPRESS, choices=evidence_savers.keys(), help="Save the issue using the default issue saver")
     verify_parser.add_argument("--proxy", nargs='?', help="Use the given proxy server, insert anything to use proxychains")
     verify_parser.set_defaults(func=verify_caller)
@@ -206,8 +188,6 @@ def main():
 
     list_issues = subparsers.add_parser("list", help="List all supported issues")
     list_issues.set_defaults(func=show_issue_list)
-
-    parser.add_argument("-p", "--dradis-project", help="Dradis project to create issue for")
 
     argcomplete.autocomplete(parser)
     args, extra_args = parser.parse_known_args()

@@ -8,6 +8,20 @@ Make sure that python 3.10 or higher is installed (this application uses functoo
 
     pip install -e .
 
+=== Dradis support
+
+    pip install -e ".[dradis]"
+
+Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values
+Note that `evidence_saver` is set to `dradis` by default. This means that if the `-s` flag is passed, evidences are saved to Dradis.
+The parameter `-p <dradis_project_id>` is then required to indicate the project in which to save the issue.
+
+=== Reporter support
+
+For use with [Reporter](https://github.com/JJK96/reporter), the config file can be edited to set `evidence_saver = issue-library`.
+In that case, evidences are saved to the current report using the `reporter` library.
+It is required that verifier is run from the report directory.
+
 == Usage
 
 === CLI
@@ -20,18 +34,19 @@ verifier verify -i all-missing-headers -t example.com
 verifier verify -i cors -t example.com -c request-response.txt
 verifier verify -i all-missing-headers -t example.com -c request-response.txt
 verifier verify -i x-xss-protection x-frame-options -t https://example.com
-verifier -p <dradis_project_id> verify -i x-xss-protection -t https://example.com
+verifier verify -i x-xss-protection -t https://example.com -s dradis -p <dradis_project_id> 
+verifier verify -i x-xss-protection -t https://example.com -s issue-library
 ----
 
 Export
 ----
-verifier -p <dradis_project_id> verify -x output.json -i x-xss-protection -t https://example.com
+verifier verify -x output.json -i x-xss-protection -t https://example.com -s dradis -p <dradis_project_id>
 ----
 
 Import
 ----
 verifier import output.json
-verifier -p <dradis_project_id> import output.json
+verifier import output.json -s dradis -p <dradis_project_id>
 ----
 
 ==== Content
@@ -94,8 +109,8 @@ Usage:
 
 ----
 start_test --help
-start_test -p <dradis_project_id> example.com
-start_test -p <dradis_project_id> -l nl example.com
+start_test -s dradis example.com -p <dradis_project_id> 
+start_test -s dradis -l nl example.com -p <dradis_project_id>
 ----
 
 Export

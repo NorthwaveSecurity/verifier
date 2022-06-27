@@ -1,18 +1,20 @@
 #!/usr/bin/env python
-from verifier.verifier import verify, export_evidences
+from verifier.verifier import verify, export_evidences, process_evidence
+from verifier.evidence_savers import evidence_savers
 import argparse
 
 parser = argparse.ArgumentParser("Automatically verify issues for host")
 parser.add_argument("target", nargs='+', help="Target to verify the issues for")
-parser.add_argument("-p", "--dradis_project_id", help="ID of dradis project")
+parser.add_argument("-s", "--save", nargs='?', default=argparse.SUPPRESS, choices=evidence_savers.keys(), help="Save the issue using the default issue saver")
 parser.add_argument('-l', '--lang', default="en", help="Reporting language")
 parser.add_argument('-x', '--export_file', help="File to export results to")
-args = parser.parse_args()
+args, extra_args = parser.parse_known_args()
 
 evidences = []
 try:
-    for evidence in verify(['all'], args.target, dradis_project_id=args.dradis_project_id, lang=args.lang):
+    for evidence in verify(['all'], args.target, save=args.save, extra_args=extra_args, lang=args.lang):
         if evidence:
+            process_evidence(evidence)
             evidences.append(evidence)
 finally:
     if args.export_file:
