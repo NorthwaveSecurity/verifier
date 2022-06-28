@@ -58,12 +58,17 @@ def process_evidence(evidence: Evidence, evidence_saver=None):
         evidence_saver.save_evidence(evidence)
 
 
-def verify_host(id, host, save=None, label=None, lang="en", export_file=None, content=None, extra_args=None, **kwargs):
+def get_evidence_saver(save, extra_args=None):
     if save is not None:
         evidence_saver = evidence_savers.get(save)
         extra_args = evidence_saver.parse_args(extra_args)
     else:
         evidence_saver = None
+    return evidence_saver, extra_args
+
+
+def verify_host(id, host, save=None, label=None, lang="en", export_file=None, content=None, extra_args=None, **kwargs):
+    evidence_saver, extra_args = get_evidence_saver(save, extra_args=extra_args)
     try:
         evidences = get_evidence_host(id, host, lang=lang, content=content, extra_args=extra_args, label=label, **kwargs)
         for evidence in evidences:
@@ -165,9 +170,14 @@ def main():
                 export_evidences(evidences, args.export_file)
 
     def import_caller(args, extra_args):
+        if 'save' in args:
+            save = args.save or config['DEFAULT'].get('evidence_saver')
+        else:
+            save = None
+        evidence_saver, _ = get_evidence_saver(save, extra_args)
         evidences = import_evidences(args.import_file)
         for evidence in evidences:
-            process_evidence(evidence)
+            process_evidence(evidence, evidence_saver=evidence_saver)
 
     parser = argparse.ArgumentParser(description="Generate evidence for standard issues")
     subparsers = parser.add_subparsers(dest="command", metavar="command", required=True)
@@ -178,13 +188,15 @@ def main():
     verify_parser.add_argument("-l", "--lang", choices=["en", "nl"], default="en", help="Reporting language")
     verify_parser.add_argument("-c", "--content", help="File with content for the evidences, e.g. request, response, in the format described in the README")
     verify_parser.add_argument("-L", "--label", help="Different label for the location in the issue")
-    verify_parser.add_argument("-s", "--save", nargs='?', default=argparse.SUPPRESS, choices=evidence_savers.keys(), help="Save the issue using the default issue saver")
     verify_parser.add_argument("--proxy", nargs='?', help="Use the given proxy server, insert anything to use proxychains")
     verify_parser.set_defaults(func=verify_caller)
 
     import_parser = subparsers.add_parser("import", help="Import results from file")
     import_parser.add_argument("import_file", help="File to import")
     import_parser.set_defaults(func=import_caller)
+
+    for p in [verify_parser, import_parser]:
+        p.add_argument("-s", "--save", nargs='?', default=argparse.SUPPRESS, choices=evidence_savers.keys(), help="Save the issue using the default issue saver")
 
     list_issues = subparsers.add_parser("list", help="List all supported issues")
     list_issues.set_defaults(func=show_issue_list)
