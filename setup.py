@@ -17,5 +17,6 @@ setup(name='Verifier',
       extras_require={
           "dradis": "dradis-api @ git+https://github.com/NorthwaveSecurity/dradis-api.git",
           'reporter': 'reporter @ git+https://github.com/JJK96/reporter.git',
+          'cookie-flags-browser': 'browser_cookie3',
       }
       )
