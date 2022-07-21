@@ -1,7 +1,8 @@
 from .dradis_curl_issue import DradisCurlIssue
-from .base import add_issue, add_expansion
+from .base import add_issue, add_expansion, Issue
 from ..util import IssueDoesNotExist
 import re
+from ..config import config
 
 
 class CookieFlags(DradisCurlIssue):
@@ -58,11 +59,59 @@ class HTTPOnlyFlag(CookieFlags):
 class SecureFlag(CookieFlags):
     cookie_flag = "Secure"
 
+class Cookie_Flags_Browser(CookieFlags):
+    cookie_flag = None
+    _template = {
+        "en": """The following cookies have been found without the {} flag:
+{}""",
+        "nl": """De volgende cookies zijn gevonden zonder {} flag:
+{}""",
+    }
+
+    def get_function(self):
+        import browser_cookie3
+        browser = config.get('cookie_flags', 'browser')
+        if browser == "firefox":
+            return browser_cookie3.firefox
+        else:
+            return browser_cookie3.load
+
+    def check_cookie(self, c):
+        """Implement in subclasses"""
+        raise NotImplementedError()
+
+    def verify(self, domain):
+        cookie_file = config.get('cookie_flags', 'cookie_file')                
+        get_cookies = self.get_function()
+        cj = get_cookies(cookie_file, domain)
+        self.cookies = []
+        for c in cj:
+            if not self.check_cookie(c):
+                self.cookies.append(c.name)
+        yield self.template.format(self.cookie_flag, self.format_cookies())
+
+
+class SecureFlag_Browser(SecureFlag, Cookie_Flags_Browser):
+    def check_cookie(self, c):
+        return c.secure
+
+
+class HTTPOnlyFlag_Browser(HTTPOnlyFlag, Cookie_Flags_Browser):
+    def check_cookie(self, c):
+        return 'HTTPOnly' in c._rest
+
 
 add_issue('http-only-flag', HTTPOnlyFlag)
 add_issue('secure-flag', SecureFlag)
+add_issue('secure-flag-browser', SecureFlag_Browser)
+add_issue('http-only-flag-browser', HTTPOnlyFlag_Browser)
 
 add_expansion('cookie-flags', [
     'http-only-flag',
     'secure-flag',
+])
+
+add_expansion('cookie-flags-browser', [
+    'http-only-flag-browser',
+    'secure-flag-browser',
 ])
