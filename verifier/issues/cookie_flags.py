@@ -107,6 +107,8 @@ class Cookie_Flags_Browser(CookieFlags):
         for c in cj:
             if not self.check_cookie(c):
                 self.cookies.append(c.name)
+        if not self.cookies:
+            raise IssueDoesNotExist()
         yield self.template.format(self.cookie_flag, self.format_cookies())
 
 
