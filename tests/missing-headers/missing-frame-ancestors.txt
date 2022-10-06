@@ -1,0 +1,28 @@
+[request]
+GET / HTTP/1.1
+Host: example.com
+User-Agent: Issue verifier
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+[response]
+HTTP/1.1 401 Unauthorized
+Date: Tue, 04 Oct 2022 14:50:49 GMT
+Server: Apache
+Cache-Control: private,no-cache, no-store, must-revalidate, pre-check=0, post-check=0, max-age=0, s-maxage=0
+Pragma: no-cache
+Content-Type: text/html
+Expires: 0
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+X-Permitted-Cross-Domain-Policies: none
+Content-Security-Policy: script-src 'self'
+permissions-policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+Strict-Transport-Security: max-age=31536000
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 682
+Keep-Alive: timeout=15, max=100
+Connection: Keep-Alive

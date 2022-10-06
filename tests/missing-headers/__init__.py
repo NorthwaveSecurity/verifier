@@ -12,6 +12,10 @@ class MissingHeadersTest(unittest.TestCase):
         content = read_content(join(dir, 'example.com.txt'))
         list(verify(['all-missing-headers'], ['example.com'], content=content))
 
+    def test_missing_frame_ancestors(self):
+        content = read_content(join(dir, 'missing-frame-ancestors.txt'))
+        list(verify(['content-security-policy'], ['example.com'], content=content))
+
 
 if __name__ == '__main__':
     unittest.main()

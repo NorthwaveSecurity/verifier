@@ -119,7 +119,8 @@ class ContentSecurityPolicy(MissingHeader):
                 yield self.format_template(request, response_str)
             if not self.check_frame_ancestors(response):
                 self.problem = "frame_ancestors"
-                yield self.format_template(request, response)
+                response_str = highlight(str(response), r'Content-Security-Policy:[^\n]+')
+                yield self.format_template(request, response_str)
         else:
             self.problem = "missing"
             yield self.format_template(request, response)
