@@ -5,6 +5,7 @@ from verifier.util import format_request_response, host_to_url
 from verifier.config import config
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.structures import CaseInsensitiveDict
+from os import environ
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 user_agent = config.get('dradis_curl', 'user_agent', fallback='Issue verifier')
@@ -84,14 +85,16 @@ def get_headers(headers=None):
     default = {
         "User-Agent": user_agent
     }
+    if 'COOKIE' in environ:
+        default['Cookie'] = environ['COOKIE']
     for k, v in headers.items():
         default[k] = v
     return default
 
 
-def do_request(url, method="GET", verify=False, allow_redirects=False, headers=None, proxies=None, *args, **kwargs):
+def do_request(url, method="GET", verify=False, allow_redirects=False, headers=None, proxies=None, timeout=1, *args, **kwargs):
     url = host_to_url(url)
-    r = requests.request(method, url, verify=verify, allow_redirects=allow_redirects, headers=get_headers(headers), proxies=proxies)
+    r = requests.request(method, url, verify=verify, allow_redirects=allow_redirects, headers=get_headers(headers), proxies=proxies, timeout=timeout)
     return dradis_format(r, *args, **kwargs)
 
 

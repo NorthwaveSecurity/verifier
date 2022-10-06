@@ -100,6 +100,9 @@ The document has moved
 p. TODO.
 ----
 
+=== Environment variables
+
+COOKIE: The content of the cookies header that should be sent with requests.
 
 === Start test
 
