@@ -22,7 +22,7 @@ p. {}.""",
         header = get_translation(self.header, self.language)
         footer = get_translation(self.footer, self.language)
         output = self._template[self.language].format(header, footer)
-        return self.prepend_description(self.append_links(output))
+        return self.append_links(output)
 
     def append_links(self, output):
         i = 1

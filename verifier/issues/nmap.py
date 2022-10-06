@@ -72,7 +72,7 @@ bc.. {{}}
             header = self.nse_header.format(self.nse) + ' ' + self.header
         else:
             header = self.header
-        return self.prepend_description(lang_template.format(header) + self.footer)
+        return lang_template.format(header) + self.footer
 
     def verify(self, host, port=None):
         if not port:
