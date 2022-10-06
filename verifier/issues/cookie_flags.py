@@ -89,18 +89,18 @@ class Cookie_Flags_Browser(CookieFlags):
 
     def get_function(self):
         import browser_cookie3
-        browser = config.get('cookie_flags', 'browser')
+        browser = config.get('cookie_flags', 'browser', fallback=None)
         if browser == "firefox":
             return browser_cookie3.firefox
         else:
-            return browser_cookie3.load
+            return lambda *_: browser_cookie3.load()
 
     def check_cookie(self, c):
         """Implement in subclasses"""
         raise NotImplementedError()
 
     def verify(self, domain):
-        cookie_file = config.get('cookie_flags', 'cookie_file')                
+        cookie_file = config.get('cookie_flags', 'cookie_file', fallback=None)
         get_cookies = self.get_function()
         cj = get_cookies(cookie_file, domain)
         self.cookies = []
