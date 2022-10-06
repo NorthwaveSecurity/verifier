@@ -1,5 +1,4 @@
 from .base import CommandIssue, add_expansion, add_issue
-from functools import cache
 from ..util import SNIP, IssueDoesNotExist, HIGHLIGHT_START, HIGHLIGHT_END
 from collections import defaultdict
 
@@ -24,7 +23,6 @@ p. {}""",
 
     }
 
-    @cache
     def run_sslyze(self, host):
         return super().run_command(["sslyze", host])
 

@@ -1,6 +1,7 @@
 import re
 import subprocess
 from . import templates
+from cachetools import cached
 
 
 SNIP = '--snip--'
@@ -16,11 +17,16 @@ def prepend_command(command, output, sudo=False):
     return '{} {}\n{}'.format("#" if sudo else "$", ' '.join(command), output)
 
 
+@cached(cache={}, key=lambda command: ' '.join(command))
+def _run_command(command):
+    result = subprocess.run(command, capture_output=True)
+    return result.stdout.replace(b'\r', b'').decode('utf-8')
+
+
 def run_command(command, visual_command=None, sudo=False, do_prepend_command=True):
     if sudo:
         command = ["sudo"] + command
-    result = subprocess.run(command, capture_output=True)
-    output = result.stdout.replace(b'\r', b'').decode('utf-8')
+    output = _run_command(command)
     if do_prepend_command:
         output = prepend_command(visual_command or command, output, sudo=sudo)
     return output
