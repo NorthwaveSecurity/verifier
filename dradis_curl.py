@@ -6,12 +6,19 @@ from verifier.config import config
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.structures import CaseInsensitiveDict
 from os import environ
+import re
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 user_agent = config.get('dradis_curl', 'user_agent', fallback='Issue verifier')
 
 
 class RequestResponse:
+    def __init__(self, hide_sensitive=True, show_sensitive_length=0):
+        self.hide_sensitive=hide_sensitive
+
+        # Number of characters at beginning and end of sensitive string to show
+        self.show_sensitive_length=show_sensitive_length
+
     def parse(self, text):
         self.headers_string, _, self.text = text.partition('\n\n')
         self.headers = CaseInsensitiveDict()
@@ -21,14 +28,32 @@ class RequestResponse:
                 self.headers[key] = value.lstrip()
 
     def __repr__(self):
-        string = self.headers_string.rstrip()
+        string = []
+
+        def replace_func(matchobj):
+            value = matchobj.group(2)
+            if self.show_sensitive_length is None:
+                return matchobj.group(0)
+            else:
+                return matchobj.group(1) + value[:self.show_sensitive_length] + "[REDACTED]" + value[len(value)-self.show_sensitive_length:] + matchobj.group(3)
+
+        def replace_func1(matchobj):
+            return matchobj.group(1) + re.sub(r"([^=;]+=)([^;]*)(;?)", replace_func, matchobj.group(2))
+
+        for header in self.headers_string.splitlines():
+            header = re.sub(r"(^Cookie: )(.*)$", replace_func1, header)
+            header = re.sub(r"(^Set-Cookie: [^=]+=)([^;]+)()", replace_func, header)
+            header = re.sub(r"(^Authorization: \w+ )(.*)()$", replace_func, header)
+            string.append(header.rstrip())
+
+        string.append("")
         if self.body:
-            string += "\r\n\r\n" + self.text.lstrip()
-        return string.rstrip()
+            string.append(self.text.strip())
+        return '\r\n'.join(string).rstrip()
 
 
 class Request(RequestResponse):
-    def __init__(self, req=None, text=None, body=True):
+    def __init__(self, req=None, text=None, body=True, **kwargs):
         self._req = req
         self.body = body
 
@@ -48,17 +73,19 @@ class Request(RequestResponse):
             self.host = self.headers.get('host')
             self.url = self.headers_string.partition('\r\n')[0].split()[1]
 
+        super().__init__(**kwargs)
+
     def __getattr__(self, key):
         return getattr(self._req, key)
 
 
 class Response(RequestResponse):
-    def __init__(self, resp=None, text=None, body=True):
+    def __init__(self, resp=None, text=None, body=True, **kwargs):
         self._resp = resp
         self.body = body
 
         if resp is not None:
-            self.req = Request(req=resp.request, body=body)
+            self.req = Request(req=resp.request, body=body, **kwargs)
             self.headers_string = 'HTTP/1.1 {} {}\r\n{}\r\n\r\n'.format(
                 self.status_code, self.reason,
                 '\r\n'.join('{}: {}'.format(k, v) for k, v in self.headers.items())
@@ -66,12 +93,17 @@ class Response(RequestResponse):
         elif text:
             self.parse(text)
 
+        super().__init__(**kwargs)
+
     def __getattr__(self, key):
         return getattr(self._resp, key)
 
 
-def dradis_format(resp, body=True):
-    resp = Response(resp=resp, body=body)
+def dradis_format(resp, body=True, no_hide=False):
+    if no_hide:
+        resp = Response(resp=resp, body=body, show_sensitive_length=None)
+    else:
+        resp = Response(resp=resp, body=body)
     req = resp.req
     return req, resp
 
@@ -110,9 +142,10 @@ def main():
     parser.add_argument('--no-verify', '-k', action="store_false", help="Do not verify", dest="verify")
     parser.add_argument('--no-body', '-n', action="store_false", help="Do not print the body", dest="body")
     parser.add_argument('--format', choices=['dradis', 'verifier'], help="Set the output format")
+    parser.add_argument('--no-hide', action="store_true", help="Do not hide sensitive values")
     parser.add_argument('url', help="The url to access")
     args = parser.parse_args()
-    print_request(args.url, method=args.method, body=args.body, verify=args.verify, format=args.format)
+    print_request(args.url, method=args.method, body=args.body, verify=args.verify, format=args.format, no_hide=args.no_hide)
 
 
 if __name__ == "__main__":
