@@ -33,7 +33,7 @@ issue_contents = """\
 from .base import {BaseClass}, add_issue, add_expansion
 
 class {IssueClass}({BaseClass}):
-    description = "Run a curl command without specific issue"
+    description = "Verifies that ..."
     _template = {{
         "en": "...",
         "nl": "...",
