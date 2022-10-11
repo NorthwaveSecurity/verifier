@@ -13,7 +13,7 @@ issues_dir = join(dir, '../verifier/issues')
 init_file = join(issues_dir, "__init__.py")
 
 verify_functions = {
-    "CommandIssue": """\
+    "CommandIssue": """
     def postprocess(self, output):
         # Called by self.run_command
         return output
@@ -22,7 +22,7 @@ verify_functions = {
         output = self.run_command(...)
         yield self.template.format(output)
 """,
-    "Issue": """\
+    "Issue": """
     def verify(self, host):
         ...
         yield self.template.format(output)
@@ -31,13 +31,13 @@ verify_functions = {
 
 issue_contents = """\
 from .base import {BaseClass}, add_issue, add_expansion
+
 class {IssueClass}({BaseClass}):
     description = "Run a curl command without specific issue"
     _template = {{
         "en": "...",
         "nl": "...",
     }}
-
     {VerifyFunctions}
 
 add_issue('{issue_name}', {IssueClass})
@@ -74,7 +74,7 @@ def create_issue(args):
         baseclass = args.baseclass
     else:
         baseclass = choose_baseclass()
-    issueclass = camelize(args.issue_name)
+    issueclass = camelize(args.issue_name).capitalize()
     issuefile = join(issues_dir, args.issue_name.replace('-', '_') + ".py")
     
     contents = issue_contents.format(
