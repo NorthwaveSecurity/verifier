@@ -207,6 +207,20 @@ class SMBSigning(NmapIssue):
         yield Evidence(self.template.format(output_str))
 
 
+class NTP_mode6(NmapIssue):
+    nse = 'ntp-info'
+    description = "Verify that NTP mode 6 is configured"
+    sudo = True
+
+    def verify(self, host, port=123):
+        command = self.command(host, port)
+        output_str = self.run_command(command)
+        trigger = "ntp-info"
+        if trigger not in output_str:
+            raise IssueDoesNotExist()
+        yield self.template.format(output_str)
+
+
 class RDPNLA(NmapIssue):
     nse = 'rdp-enum-encryption'
     description = 'Verify that RDP does not require NLA'
@@ -222,8 +236,8 @@ class RDPNLA(NmapIssue):
             raise IssueDoesNotExist()
         output_str = highlight(output_str, regex)
         yield Evidence(self.template.format(output_str))
-        
 
+        
 add_issue('dns-cache-snoop', DNSCacheSnoop)
 add_issue('dns-recursion', DNSRecursion)
 add_issue('mdns-service-discovery', MDNSServiceDiscovery)
@@ -231,5 +245,6 @@ add_issue('ssh-algos', SSHAlgos)
 add_issue('outdated-mssql', OutdatedMSSQL)
 add_issue('outdated-msdns', OutdatedMSDNS)
 add_issue('smb-signing', SMBSigning)
+add_issue('ntp-mode6', NTP_mode6)
 add_issue('rdp-nla', RDPNLA)
 add_issue('nmap', NmapIssue)
