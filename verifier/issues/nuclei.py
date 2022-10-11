@@ -2,7 +2,7 @@ from .base import CommandIssue, add_issue, add_expansion
 import re
 
 class Nuclei(CommandIssue):
-    description = "Run a curl command without specific issue"
+    description = "Run a nuclei command without specific issue"
     _template = {
         "en": """Nuclei output:
 
