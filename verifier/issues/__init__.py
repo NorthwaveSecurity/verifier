@@ -1,3 +1,4 @@
+from . import nuclei
 from . import curl
 from . import outdated_web
 from . import nmap
