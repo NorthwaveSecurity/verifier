@@ -75,7 +75,8 @@ def create_issue(args):
     else:
         baseclass = choose_baseclass()
     issueclass = camelize(args.issue_name).capitalize()
-    issuefile = join(issues_dir, args.issue_name.replace('-', '_') + ".py")
+    module_name = args.issue_name.replace('-', '_')
+    issuefile = join(issues_dir, module_name + ".py")
     
     contents = issue_contents.format(
         BaseClass=baseclass,
@@ -90,7 +91,7 @@ def create_issue(args):
         old_contents = f.read()
 
     with open(init_file, 'w') as f:
-        new_contents = "from . import {}\n".format(args.issue_name)  + old_contents
+        new_contents = "from . import {}\n".format(module_name)  + old_contents
         f.write(new_contents)
 
 
