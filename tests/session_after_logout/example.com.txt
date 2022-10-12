@@ -1,0 +1,71 @@
+[logout]
+GET /nl/Logout HTTP/2
+Host: example.com
+Cookie: ASP.NET_SessionId_Redacted_Redacted.Acceptance=ixfrstoienrsotienrstoienrstoierntorisetnrstuvu; .ASPXAUTH_Redacted_Redacted.Acceptance=16Aoywufntsrsieotniowefnoisrentrso7A7
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://example.com
+Upgrade-Inse-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+[logout_response]
+HTTP/2 302 Found
+Date: Thu, 01 Sep 2022 13:54:59 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 21840
+Cache-Control: private
+Location: https://example.com
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: .ASPXAUTH_Redacted_Redacted.Acceptance=rstioenrstoiersntrosien; expires=Mon, 11-Oct-1999 22:00:00 GMT; path=/; se; HttpOnly; SameSite=None
+P3p: CP="CURa ADMa DEVa CONo HISa OUR IND DSP ALL COR"
+X-Xss-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Security-Policy: rsietnwfoietnrsiotnsrto
+
+<html><head><title>Object moved</title></head><body>
+<h2>Object moved to <a href="https://example.com/nl/ui">here</a>.</h2>
+</body></html>
+--snip--
+[request]
+GET /_api/home/recently-viewed-courses HTTP/2
+Host: example.com
+Cookie: ASP.NET_SessionId_Redacted_Redacted.Acceptance=ixfrstoienrsotienrstoienrstoierntorisetnrstuvu; .ASPXAUTH_Redacted_Redacted.Acceptance=16Aoywufntsrsieotniowefnoisrentrso7A7
+Authorization: Bearer aioernstoiersntoiesrnt
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+Apache-Culture: nl-NL
+Apache-Catalogid: ea108a63-4286-4842-96cb-5efa8bbcd8ef
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+Te: trailers
+[response]
+HTTP/2 200 OK
+Date: Thu, 01 Sep 2022 13:55:47 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 3101
+Cache-Control: no-cache
+Pragma: no-cache
+Expires: -1
+Location: /
+Server: Apache
+Set-Cookie: .ASPXAUTH_Redacted_Redacted.Acceptance=; expires=Mon, 11-Oct-1999 22:00:00 GMT; path=/; se; HttpOnly; SameSite=None
+P3p: CP="CURa ADMa DEVa CONo HISa OUR IND DSP ALL COR"
+X-Xss-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Security-Policy: risentowifentrsietnsroietnsrt
+
+<html><head><title>Object moved</title></head><body>
+<h2>Object moved to <a href="/">here</a>.</h2>
+</body></html>
