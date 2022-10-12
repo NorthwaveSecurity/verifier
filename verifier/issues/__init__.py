@@ -1,3 +1,4 @@
+from . import LFI
 from . import session_after_logout
 from . import nuclei
 from . import curl
