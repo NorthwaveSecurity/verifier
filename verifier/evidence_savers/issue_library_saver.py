@@ -15,4 +15,4 @@ class EvidenceSaver(Base):
             template.report_manager.create_evidence(evidence.label or evidence.host, description=evidence.output)
 
 
-add_evidence_saver("issue-library", EvidenceSaver())
+add_evidence_saver("issue-library", EvidenceSaver)

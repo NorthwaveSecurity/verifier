@@ -2,7 +2,6 @@ import argparse
 from .evidence_saver import add_evidence_saver, EvidenceSaver as Base
 from ..issues import get_issue
 from ..config import config
-from dradis import Dradis
 import logging
 from argparse import ArgumentParser
 
@@ -11,6 +10,7 @@ class EvidenceSaver(Base):
     def __init__(self):
         api_token = config['DEFAULT']['api_token']
         url = config['DEFAULT']['url']
+        from dradis import Dradis
         self.dradis = Dradis(api_token, url)
 
     def save_evidence(self, evidence):
@@ -31,5 +31,5 @@ class EvidenceSaver(Base):
         return extra_args
     
 
-add_evidence_saver("dradis", EvidenceSaver())
+add_evidence_saver("dradis", EvidenceSaver)
 

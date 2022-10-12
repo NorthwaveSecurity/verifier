@@ -60,7 +60,7 @@ def process_evidence(evidence: Evidence, evidence_saver=None):
 
 def get_evidence_saver(save, extra_args=None):
     if save is not None:
-        evidence_saver = evidence_savers.get(save)
+        evidence_saver = evidence_savers.get(save)()
         extra_args = evidence_saver.parse_args(extra_args)
     else:
         evidence_saver = None
