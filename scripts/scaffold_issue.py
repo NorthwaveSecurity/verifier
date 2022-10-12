@@ -12,6 +12,12 @@ dir = dirname(realpath(__file__))
 issues_dir = join(dir, '../verifier/issues')
 init_file = join(issues_dir, "__init__.py")
 
+modules = {
+    "CommandIssue": "base",
+    "Issue": "base",
+    "DradisCurlIssue": "dradis_curl_issue",
+}
+
 verify_functions = {
     "CommandIssue": """
     def postprocess(self, output):
@@ -26,17 +32,34 @@ verify_functions = {
     def verify(self, host):
         ...
         yield self.template.format(output)
+""",
+    "DradisCurlIssue": """
+    def edit(self, response):
+        def edit_function(line):
+            if some_check:
+                return edited_line
+            else:
+                # Do not include line in output
+                return False
+        return self.edit_body(response, edit_function)
+
+    def verify(self, url):
+        request, response = self.do_request(url)
+        yield self.template.format(request, self.edit(response))
 """
 }
 
 issue_contents = """\
-from .base import {BaseClass}, add_issue, add_expansion
+from .base import add_issue, add_expansion
+from .{module} import {BaseClass}
 
 class {IssueClass}({BaseClass}):
     description = "Verifies that ..."
     _template = {{
-        "en": "...",
-        "nl": "...",
+        "en": ""\"...
+""\",
+        "nl": ""\"...
+""\",
     }}
     {VerifyFunctions}
 
@@ -59,7 +82,11 @@ def all_classes_iter():
 
 def choose_baseclass():
     # issues = list(all_classes_iter())
-    issues = [("Issue", verifier.issues.Issue), ("CommandIssue", verifier.issues.CommandIssue)]
+    issues = [
+        ("Issue", verifier.issues.Issue), 
+        ("CommandIssue", verifier.issues.CommandIssue),
+        ("DradisCurlIssue", verifier.issues.dradis_curl_issue.DradisCurlIssue),
+    ]
     for i, (name, c) in enumerate(issues):
         print("%d: %s" % (i, name))
     index = input("Choose the issue to subclass: (Issue)")
@@ -82,7 +109,8 @@ def create_issue(args):
         BaseClass=baseclass,
         IssueClass=issueclass,
         issue_name=args.issue_name,
-        VerifyFunctions=verify_functions[baseclass]
+        VerifyFunctions=verify_functions[baseclass],
+        module=modules[baseclass],
     )
     with open(issuefile, 'w+') as f:
         f.write(contents)
