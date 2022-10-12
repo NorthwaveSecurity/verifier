@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import requests
 import argparse
-from verifier.util import format_request_response, host_to_url
+from verifier.util import HIGHLIGHT_END, HIGHLIGHT_START, SNIP, format_request_response, host_to_url
 from verifier.config import config
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.structures import CaseInsensitiveDict
@@ -13,8 +13,11 @@ user_agent = config.get('dradis_curl', 'user_agent', fallback='Issue verifier')
 
 
 class RequestResponse:
-    def __init__(self, hide_sensitive=True, show_sensitive_length=0):
+    def __init__(self, hide_sensitive=True, show_sensitive_length=0, highlight_body=False, truncated=None):
         self.hide_sensitive=hide_sensitive
+        self.highlight_body=highlight_body
+        # Truncate after `truncated` characters
+        self.truncated=truncated
 
         # Number of characters at beginning and end of sensitive string to show
         self.show_sensitive_length=show_sensitive_length
@@ -48,7 +51,21 @@ class RequestResponse:
 
         string.append("")
         if self.body:
-            string.append(self.text.strip())
+            chars = 0
+            should_break = False
+            for line in self.text.strip().splitlines():
+                if self.truncated and chars + len(line) > self.truncated:
+                    line = line[:self.truncated - len(line) - chars]
+                    should_break = True
+                if self.highlight_body:
+                    new_line = HIGHLIGHT_START + line + HIGHLIGHT_END
+                else:
+                    new_line = line
+                string.append(new_line)
+                chars += len(line)
+                if should_break:
+                    string.append(SNIP)
+                    break
         return '\r\n'.join(string).rstrip()
 
 
