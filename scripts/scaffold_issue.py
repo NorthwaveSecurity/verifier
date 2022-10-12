@@ -95,10 +95,11 @@ def create_issue(args):
         f.write(new_contents)
 
 
-from argparse_prompt import PromptParser
-parser = PromptParser()
-parser.add_argument("--baseclass", choices=["CommandIssue", "Issue"], prompt=False)
-parser.add_argument("--issue-name")
-args = parser.parse_args()
+if __name__ == "__main__":
+    from argparse_prompt import PromptParser
+    parser = PromptParser()
+    parser.add_argument("--baseclass", choices=["CommandIssue", "Issue"], prompt=False)
+    parser.add_argument("--issue-name")
+    args = parser.parse_args()
 
-create_issue(args)
+    create_issue(args)
