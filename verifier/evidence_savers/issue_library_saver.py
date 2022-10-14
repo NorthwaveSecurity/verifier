@@ -2,10 +2,10 @@ from .evidence_saver import add_evidence_saver, EvidenceSaver as Base
 from ..issues import get_issue
 from os.path import join
 from ..config import config
-from reporter import Template, config as reporter_config
 
 class EvidenceSaver(Base):
     def save_evidence(self, evidence):
+        from reporter import Template, config as reporter_config
         template = Template(reporter_config.get('template'), evidence.lang)
         issue = get_issue(evidence.id, lang=evidence.lang)
         if issue.standard_issue_path:
