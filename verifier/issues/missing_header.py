@@ -142,7 +142,6 @@ class ContentSecurityPolicy(MissingHeader):
         return super().description + " or can be stricter"
 
 
-add_issue('x-xss-protection', XXSSProtection)
 add_issue('x-frame-options', XFrameOptions)
 add_issue('x-content-type-options', XContentTypeOptions)
 add_issue('strict-transport-security', StrictTransportSecurity)
@@ -150,7 +149,6 @@ add_issue('content-security-policy', ContentSecurityPolicy)
 add_issue('missing-header', MissingHeader)
 
 add_expansion('all-missing-headers', [
-    'x-xss-protection',
     'x-content-type-options',
     'strict-transport-security',
     'content-security-policy',

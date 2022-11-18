@@ -74,14 +74,14 @@ verifier verify -l nl -i dns-cache-snoop -t 8.8.8.8
 verifier verify -i all-missing-headers -t example.com
 verifier verify -i cors -t example.com -c request-response.txt
 verifier verify -i all-missing-headers -t example.com -c request-response.txt
-verifier verify -i x-xss-protection x-frame-options -t https://example.com
-verifier verify -i x-xss-protection -t https://example.com -s dradis -p <dradis_project_id> 
-verifier verify -i x-xss-protection -t https://example.com -s issue-library
+verifier verify -i content-security-policy x-frame-options -t https://example.com
+verifier verify -i content-security-policy -t https://example.com -s dradis -p <dradis_project_id> 
+verifier verify -i content-security-policy -t https://example.com -s issue-library
 ----
 
 Export
 ----
-verifier verify -x output.json -i x-xss-protection -t https://example.com -s dradis -p <dradis_project_id>
+verifier verify -x output.json -i content-security-policy -t https://example.com -s dradis -p <dradis_project_id>
 ----
 
 Import
