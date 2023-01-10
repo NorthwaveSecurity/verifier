@@ -204,6 +204,23 @@ class SMBSigning(NmapIssue):
         yield self.template.format(output_str)
 
 
+class RDPNLA(NmapIssue):
+    nse = 'rdp-enum-encryption'
+    description = 'Verify that RDP does not require NLA'
+
+    def verify(self, host, port=3389):
+        command = self.command(host, port)
+        output_str = self.run_command(command)
+        regex = r"CredSSP \(NLA\): (\w+)"
+        match = re.search(regex, output_str)
+        if not match:
+            raise IssueDoesNotExist()
+        if match.group(1) == "SUCCESS":
+            raise IssueDoesNotExist()
+        output_str = highlight(output_str, regex)
+        yield self.template.format(output_str)
+        
+
 add_issue('dns-cache-snoop', DNSCacheSnoop)
 add_issue('dns-recursion', DNSRecursion)
 add_issue('mdns-service-discovery', MDNSServiceDiscovery)
@@ -211,4 +228,5 @@ add_issue('ssh-algos', SSHAlgos)
 add_issue('outdated-mssql', OutdatedMSSQL)
 add_issue('outdated-msdns', OutdatedMSDNS)
 add_issue('smb-signing', SMBSigning)
+add_issue('rdp-nla', RDPNLA)
 add_issue('nmap', NmapIssue)
