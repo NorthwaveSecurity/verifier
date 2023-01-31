@@ -7,7 +7,7 @@ import sys
 from verifier.evidence_savers import evidence_saver
 from .issues import issues, expansions, get_issue
 from .util import IssueDoesNotExist
-from .config import config
+from .config import config, configure
 from .content_reader import read_content
 from .evidence_savers import evidence_savers
 
@@ -179,6 +179,9 @@ def main():
         for evidence in evidences:
             process_evidence(evidence, evidence_saver=evidence_saver)
 
+    def configure_caller(args, extra_args):
+        configure()
+
     parser = argparse.ArgumentParser(description="Generate evidence for standard issues")
     subparsers = parser.add_subparsers(dest="command", metavar="command", required=True)
     verify_parser = subparsers.add_parser("verify", help="Generate evidence for standard issues")
@@ -194,6 +197,10 @@ def main():
     import_parser = subparsers.add_parser("import", help="Import results from file")
     import_parser.add_argument("import_file", help="File to import")
     import_parser.set_defaults(func=import_caller)
+
+    configure_parser = subparsers.add_parser("configure", help="Configure verifier")
+    configure_parser.set_defaults(func=configure_caller)
+
 
     for p in [verify_parser, import_parser]:
         p.add_argument("-s", "--save", nargs='?', default=argparse.SUPPRESS, choices=evidence_savers.keys(), help="Save the issue using the default issue saver")
