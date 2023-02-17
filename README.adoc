@@ -8,11 +8,28 @@ Make sure that python 3.10 or higher is installed (this application uses functoo
 
     pip install -e .
 
+Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values.
+
+=== Nmap support
+
+Install nmap, e.g.:
+
+    brew install nmap
+
+=== TestSSL support
+
+Install TestSSL, see: https://github.com/drwetter/testssl.sh#installation
+
+Then in `~/.config/verifier.ini` edit the following lines to represent the path where you installed the testssl script.
+
+    [testssl]
+    path = testssl path
+
 === Dradis support
 
     pip install -e ".[dradis]"
 
-Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values
+In the `[dradis]` section in `~/.config/verifier.ini` edit the values.
 Note that `evidence_saver` is set to `dradis` by default. This means that if the `-s` flag is passed, evidences are saved to Dradis.
 The parameter `-p <dradis_project_id>` is then required to indicate the project in which to save the issue.
 
