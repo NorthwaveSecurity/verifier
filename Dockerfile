@@ -9,7 +9,8 @@ RUN mkdir -p -m 0700 ~/.ssh && \
     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 RUN apt update && \
-    apt install -y --no-install-recommends nmap bsdmainutils dnsutils
+    apt install -y --no-install-recommends nmap bsdmainutils dnsutils && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY . /opt/verifier
 
