@@ -30,6 +30,12 @@ p. {}""",
         result = self.run_sslyze(host)
         yield self.template.format(self.header, result.rstrip(), self.footer)
 
+    def postprocess(self, output):
+        i = output.index("COMPLIANCE AGAINST MOZILLA")
+        lines = output.splitlines()
+        output = "\n".join(lines[:5] + [SNIP, ""]) + output[i:]
+        return super().postprocess(output)
+
     @property
     def header(self):
         return self._header[self.language]
