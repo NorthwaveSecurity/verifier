@@ -35,8 +35,8 @@ Build the docker container:
 
 Then run the container:
 
-    docker run -it verifier --help
-    docker run -it verifier verify ...
+    docker run --rm -it verifier --help
+    docker run --rm -it verifier verify ...
 
 === Nmap support
 
