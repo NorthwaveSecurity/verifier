@@ -239,6 +239,10 @@ from . import new_issue
 
 == Testing
 
+    make tests
+
+or manually:
+
 ```
 python -m unittest discover tests
 ```
