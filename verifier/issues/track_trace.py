@@ -17,7 +17,7 @@ bc.. {}""",
     }
 
     def check(self, response):
-        failure_codes = [404, 405, 501]
+        failure_codes = [400, 404, 405, 501]
         first_line = response.headers_string.partition('\n')[0]
         for code in failure_codes:
             if str(code) in first_line:

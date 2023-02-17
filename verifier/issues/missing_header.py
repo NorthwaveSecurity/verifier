@@ -12,7 +12,7 @@ class MissingHeader(DradisCurlIssue):
     }
     _template = {
         "en": """p. Request:
-        
+
 bc.. {}
 
 p. Response:
@@ -21,7 +21,7 @@ bc.. {}
 
 p. {}.""",
         "nl": """p. Request:
-        
+
 bc.. {}
 
 p. Response:
