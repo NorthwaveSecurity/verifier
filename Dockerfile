@@ -17,6 +17,9 @@ WORKDIR /opt/verifier
 
 RUN --mount=type=ssh pip install --no-cache-dir -e .[default]
 
+# Configure verifier
+RUN cp config.sample.ini /root/.config/verifier.ini
+
 VOLUME /root/.config
 VOLUME /data
 
