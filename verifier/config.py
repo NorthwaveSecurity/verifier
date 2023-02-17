@@ -1,5 +1,6 @@
 import configparser
 import os
+import sys
 
 user_config = os.path.expanduser('~/.config/verifier.ini')
 
@@ -8,22 +9,26 @@ config_locations = [
     user_config,
 ]
 config = configparser.ConfigParser()
+config.default_section = "fallback"
 for config_location in config_locations:
     config.read(config_location)
 
+
 def configure():
-    sections = []
-    for i, x in enumerate(config.keys()):
-        sections.append(x)
+    print("Current configuration: ")
+    config.write(sys.stdout)
+    print()
+
+    sections = [key for key in config.keys() if key != config.default_section]
+    for i, x in enumerate(sections):
         print(f"{i}: {x}")
-    section = int(input("Which section would you like to edit [0-{}] ".format(len(config.keys()))))
+    section = int(input("Which section would you like to edit [0-{}] ".format(len(sections)-1)))
     section_key = sections[section]
     print("Editing section: {}".format(section_key))
-    keys = []
-    for i, x in enumerate(config.options(section_key)):
-        keys.append(x)
+    keys = [key for key in config.options(section_key)]
+    for i, x in enumerate(keys):
         print(f"{i}: {x}")
-    key_num = int(input("Which key would you like to edit [0-{}] ".format(len(keys))))
+    key_num = int(input("Which key would you like to edit [0-{}] ".format(len(keys)-1)))
     key = keys[key_num]
     print("Editing {}: {}".format(key, config[section_key][key]))
     value = input("New value: ")
