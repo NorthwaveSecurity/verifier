@@ -19,7 +19,10 @@ def prepend_command(command, output, sudo=False):
 
 @cached(cache={}, key=lambda command: ' '.join(command))
 def _run_command(command):
-    result = subprocess.run(command, capture_output=True)
+    try:
+        result = subprocess.run(command, capture_output=True)
+    except FileNotFoundError as e:
+        raise Exception(f"The program {e.filename} is currently not installed. Please install it to verify this issue.")
     return result.stdout.replace(b'\r', b'').decode('utf-8')
 
 
