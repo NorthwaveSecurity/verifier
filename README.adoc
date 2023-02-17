@@ -4,6 +4,17 @@ Automatically verify issues
 
 == Setup
 
+=== Local
+
+==== Requirements
+
+- python 3.10
+- nmap
+- dig
+- curl
+
+==== Instructions
+
 Make sure that python 3.10 or higher is installed (this application uses functools.cache).
 
     pip install -e .[default]
@@ -13,6 +24,19 @@ or install only the base system:
     pip install -e .
 
 Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values.
+
+=== Docker
+
+Copy `config.sample.ini` to `config.ini` and edit the values.
+
+Build the docker container:
+
+    make docker
+
+Then run the container:
+
+    docker run -it verifier --help
+    docker run -it verifier verify ...
 
 === Nmap support
 
