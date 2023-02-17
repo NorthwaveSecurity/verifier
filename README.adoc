@@ -6,6 +6,10 @@ Automatically verify issues
 
 Make sure that python 3.10 or higher is installed (this application uses functools.cache).
 
+    pip install -e .[default]
+
+or install only the base system:
+
     pip install -e .
 
 Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values.
@@ -24,6 +28,10 @@ Then in `~/.config/verifier.ini` edit the following lines to represent the path 
 
     [testssl]
     path = testssl path
+
+=== SSLyze support
+
+    pip install -e ".[sslyze]"
 
 === Dradis support
 
