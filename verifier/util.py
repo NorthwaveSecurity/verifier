@@ -79,3 +79,10 @@ def truncate_response(response, length=1000):
 
 class IssueDoesNotExist(Exception):
     pass
+
+class PostProcessingFailed(Exception):
+    def __init__(self, command_output):
+        self.message = "Command output:\n\n" + command_output
+        super().__init__(self.message)
+
+

@@ -1,4 +1,4 @@
-from ..util import prepend_command, run_command
+from ..util import prepend_command, run_command, PostProcessingFailed
 from collections import defaultdict
 
 
@@ -74,8 +74,11 @@ class CommandIssue(Issue):
             if self.proxychains:
                 command = ['proxychains'] + command
             output = run_command(command, visual_command=visual_command, sudo=self.sudo, do_prepend_command=do_prepend_command)
-        output = self.postprocess(output)
-        return output
+        try:
+            new_output = self.postprocess(output)
+            return new_output
+        except Exception:
+            raise PostProcessingFailed(output)
 
 
 issues = {}
