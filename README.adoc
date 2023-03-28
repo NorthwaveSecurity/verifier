@@ -44,15 +44,6 @@ Install nmap, e.g.:
 
     brew install nmap
 
-=== TestSSL support
-
-Install TestSSL, see: https://github.com/drwetter/testssl.sh#installation
-
-Then in `~/.config/verifier.ini` edit the following lines to represent the path where you installed the testssl script.
-
-    [testssl]
-    path = testssl path
-
 === SSLyze support
 
     pip install -e ".[sslyze]"
