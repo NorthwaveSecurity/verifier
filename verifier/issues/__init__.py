@@ -16,6 +16,7 @@ from . import stack_trace
 from . import path_disclosure
 from . import portscan
 from . import sslyze
+from . import scoutsuite
 from .base import Issue, CommandIssue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
