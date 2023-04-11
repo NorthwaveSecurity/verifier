@@ -17,7 +17,7 @@ Automatically verify issues
 
 Make sure that python 3.10 or higher is installed (this application uses functools.cache).
 
-    pip install -e .[default]
+    pip install -e ".[default]"
 
 or install only the base system:
 
@@ -77,6 +77,7 @@ It is required that verifier is run from the report directory.
 
 ----
 verifier --help
+verifier verify -i all -t example.com
 verifier verify -i dns-cache-snoop -t 8.8.8.8
 verifier verify -l nl -i dns-cache-snoop -t 8.8.8.8
 verifier verify -i all-missing-headers -t example.com
