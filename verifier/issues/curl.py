@@ -53,7 +53,7 @@ p. {}.""",
         """
         return host_to_url(url)
 
-    def verify(self, url, args=[]):
+    def verify(self, url, args=None):
         url = self.edit_url(url)
         output_str = self.edit(self.run(url, args))
         yield self.template.format(output_str)
