@@ -20,6 +20,7 @@ class Issue:
                 self.extra_args = extra_args
         else:
             self.extra_args = []
+        self._links = []
         self.parse_args(self.extra_args)
         if proxy is not None:
             self.handle_proxy(proxy)
@@ -38,6 +39,13 @@ class Issue:
         """
         Override to add postprocessing
         """
+        return output
+
+    def append_links(self, output):
+        i = 1
+        for link in self._links:
+            output += f"\n\nbc. fn{i}. {link}"
+            i += 1
         return output
 
     def handle_proxy(self, proxy):

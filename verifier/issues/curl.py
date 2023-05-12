@@ -24,13 +24,6 @@ p. {}.""",
         output = self._template[self.language].format(header, footer)
         return self.append_links(output)
 
-    def append_links(self, output):
-        i = 1
-        for link in self._links:
-            output += f"\n\nbc. fn{i}. {link}"
-            i += 1
-        return output
-
     def run(self, url, args=None):
         if args is None:
             args = []
