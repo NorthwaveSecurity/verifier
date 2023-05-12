@@ -1,10 +1,11 @@
 from .base import add_issue
 from .curl import Curl
+from .ftp import FTP
 from ..util import SNIP, highlight, IssueDoesNotExist
 import re
 
 
-class OutdatedWeb(Curl):
+class Outdated:
     _software = "SOFTWARE"
     _version = "VERSION"
     vuln_link = None
@@ -25,6 +26,48 @@ class OutdatedWeb(Curl):
             return "Verify an outdated front-end library"
         else:
             return "Verify an outdated version of {}".format(self._software)
+
+    def edit(self, output):
+        regex = re.compile(rf"{self._software}{self._version_regex}")
+        version_search = re.search(regex, output)
+        if not version_search:
+            raise IssueDoesNotExist()
+        self._version = version_search.group(1)
+        return highlight(output, regex)
+
+
+class NVDLinkMixin:
+    @property
+    def vuln_link(self):
+        return f"https://nvd.nist.gov/vuln/search/results?form_type=Advanced&results_type=overview&search_type=all&isCpeNameSearch=false&cpe_version=cpe:/:{self._vendor}:{self._software}:{self._version}"
+
+
+class OutdatedWeb(Outdated, Curl):
+    pass
+
+
+class OutdatedFTP(NVDLinkMixin, Outdated, FTP):
+    def postprocess(self, output):
+        return self.edit(output)
+
+
+class OutdatedVSFTPd(OutdatedFTP):
+    _software = "vsFTPd"
+    _vendor = "vsftpd_project"
+    _version_regex = r" ([\d\.]+)"
+
+
+class OutdatedHTTPHeader(NVDLinkMixin, OutdatedWeb):
+    _version_regex = r"/([\d\.]+)"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.extra_args = ["-I"]
+
+
+class OutdatedNginx(OutdatedHTTPHeader):
+    _software = "nginx"
+    _vendor = "f5"
 
 
 class OutdatedWordpress(OutdatedWeb):
@@ -128,3 +171,5 @@ add_issue('outdated-jquery-ui', OutdatedJQueryUI)
 add_issue('outdated-jquery-ui-dialog', OutdatedJQueryUIDialog)
 add_issue('outdated-modernizr', OutdatedModernizr)
 add_issue('outdated-plupload', OutdatedPLUpload)
+add_issue('outdated-nginx', OutdatedNginx)
+add_issue('outdated-vsftpd', OutdatedVSFTPd)

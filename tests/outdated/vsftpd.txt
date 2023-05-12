@@ -1,0 +1,3 @@
+Connected to example.com.
+220 (vsFTPd 2.3.5)
+221 Goodbye.

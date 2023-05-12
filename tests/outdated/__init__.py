@@ -16,6 +16,14 @@ class OutdatedTest(unittest.TestCase):
         content = read_content(os.path.join(dir, 'wordpress.txt'))
         list(verify_host('outdated-wordpress', 'https://example.com/', content=content))
 
+    def test_outdated_vsftpd(self):
+        content = read_content(os.path.join(dir, 'vsftpd.txt'))
+        list(verify_host('outdated-vsftpd', 'example.com', content=content))
+
+    def test_outdated_nginx(self):
+        content = read_content(os.path.join(dir, 'nginx.txt'))
+        list(verify_host('outdated-nginx', 'example.com', content=content))
+
 
 if __name__ == '__main__':
     unittest.main()
