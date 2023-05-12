@@ -63,7 +63,7 @@ class CommandIssue(Issue):
     def handle_proxy(self, proxy):
         self.proxychains = True
 
-    def run_command(self, command, visual_command=None, do_prepend_command=True):
+    def run_command(self, command, visual_command=None, do_prepend_command=True, stdin=""):
         visual_command = visual_command or command
         if 'output' in self.content:
             if do_prepend_command:
@@ -73,7 +73,7 @@ class CommandIssue(Issue):
         else:
             if self.proxychains:
                 command = ['proxychains'] + command
-            output = run_command(command, visual_command=visual_command, sudo=self.sudo, do_prepend_command=do_prepend_command)
+            output = run_command(command, visual_command=visual_command, sudo=self.sudo, do_prepend_command=do_prepend_command, stdin=stdin)
         try:
             new_output = self.postprocess(output)
             return new_output

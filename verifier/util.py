@@ -17,19 +17,21 @@ def prepend_command(command, output, sudo=False):
     return '{} {}\n{}'.format("#" if sudo else "$", ' '.join(command), output)
 
 
-@cached(cache={}, key=lambda command: ' '.join(command))
-def _run_command(command):
+@cached(cache={}, key=lambda command, **_: ' '.join(command))
+def _run_command(command, stdin=""):
     try:
-        result = subprocess.run(command, capture_output=True)
+        p_stdin = subprocess.PIPE
+        proc = subprocess.Popen(command, stdin=p_stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = proc.communicate(stdin)
     except FileNotFoundError as e:
         raise Exception(f"The program {e.filename} is currently not installed. Please install it to verify this issue.")
-    return result.stdout.replace(b'\r', b'').decode('utf-8')
+    return stdout.replace(b'\r', b'').decode('utf-8')
 
 
-def run_command(command, visual_command=None, sudo=False, do_prepend_command=True):
+def run_command(command, visual_command=None, sudo=False, do_prepend_command=True, stdin=""):
     if sudo:
         command = ["sudo"] + command
-    output = _run_command(command)
+    output = _run_command(command, stdin="")
     if do_prepend_command:
         output = prepend_command(visual_command or command, output, sudo=sudo)
     return output
