@@ -17,6 +17,7 @@ Content-Length: 220
 X-XSS-Protection: 0
 X-Frame-Options: SAMEORIGIN
 Set-Cookie: dwac_1aeb1113dd96a289184864dcce=[REDACTED]; Path=/; Secure; SameSite=None, cqcid=[REDACTED]; Path=/; Secure; SameSite=None, cquid=||; Path=/; Secure; SameSite=None, sid=[REDACTED]; Path=/; Secure; SameSite=None, __cq_dnt=1; Path=/; Secure; SameSite=None, dw_dnt=1; Path=/; Secure; SameSite=None, cc-nx-g_Global=[REDACTED]; Expires=Sat, 20-May-2023 12:42:01 GMT; Path=/; Secure; SameSite=None, cc-sg_Global=1; Expires=Mon, 15-May-2023 12:43:01 GMT; Path=/; Secure; SameSite=None, _Locale=Global|IT|en_IT; Expires=Tue, 14-May-2024 12:42:01 GMT; Path=/; Secure; SameSite=None, somepersonalization=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; SameSite=None, something=[REDACTED]; Version=1; Comment="Something cookie for site Sites-Global-Site"; Max-Age=15552000; Expires=Sat, 11-Nov-2023 12:42:01 GMT; Path=/; Secure; SameSite=None
+Set-Cookie: another_cookie=abc
 P3P: CP="This is not a P3P policy! See g.co/p3phelp for more info."
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 
