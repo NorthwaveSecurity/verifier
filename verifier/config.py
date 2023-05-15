@@ -35,3 +35,6 @@ def configure():
     config.set(section_key, key, value)
     with open(user_config, 'w') as f:
         config.write(f)
+
+if __name__ == "__main__":
+    config.write(sys.stdout)
