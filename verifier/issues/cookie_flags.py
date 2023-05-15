@@ -6,7 +6,7 @@ from ..config import config
 
 
 class CookieFlags(DradisCurlIssue):
-    cookie_regex = r"Set-Cookie: *([^=]+)=[^;\n]([^\n]*)"
+    cookie_regex = r"^([^=]+)=[^;\n](.+)$"
     _template = {
         "en": """Request:
 
@@ -27,6 +27,10 @@ p. Cookies without {} flag:
     def process_response(self, response):
         self.cookies = []
 
+        search = re.search(r"Set-Cookie: ([^\n\r]+)", response, flags=re.IGNORECASE)
+        if not search:
+            raise IssueDoesNotExist()
+
         def handle_cookie(match):
             cookie = match.group(1)
             flags = match.group(2)
@@ -36,7 +40,14 @@ p. Cookies without {} flag:
             else:
                 self.cookies.append(cookie)
                 return "$${{" + all + "}}$$"
-        return re.sub(self.cookie_regex, handle_cookie, response, flags=re.IGNORECASE)
+
+        new_cookie_header = []
+        for cookie in search.group(1).split(','):
+            cookie = re.sub(self.cookie_regex, handle_cookie, cookie.strip(), flags=re.IGNORECASE)
+            new_cookie_header.append(cookie)
+        new_cookie_header = "Set-Cookie: " + ', '.join(new_cookie_header)
+
+        return re.sub(r"Set-Cookie: [^\n\r]+", new_cookie_header, response, flags=re.IGNORECASE)
 
     def format_cookies(self):
         builder = []
