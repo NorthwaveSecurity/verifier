@@ -166,7 +166,7 @@ def get_headers(headers=None):
     return default
 
 
-def do_request(url, method="GET", verify=False, allow_redirects=False, headers=None, proxies=None, timeout=1, *args, **kwargs):
+def do_request(url, method="GET", verify=False, allow_redirects=False, headers=None, proxies=None, timeout=2, *args, **kwargs):
     url = host_to_url(url)
     r = requests.request(method, url, verify=verify, allow_redirects=allow_redirects, headers=get_headers(headers), proxies=proxies, timeout=timeout)
     return dradis_format(r, *args, **kwargs)

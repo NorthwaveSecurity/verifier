@@ -26,6 +26,7 @@ add_expansion('all', [
     'all-missing-headers',
     'server-version',
     'dnssec',
+    'cookie-flags',
 ])
 
 def get_issue(id, lang="en", content=None, extra_args=None, **kwargs):
