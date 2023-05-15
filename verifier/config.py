@@ -38,3 +38,7 @@ def configure():
 
 if __name__ == "__main__":
     config.write(sys.stdout)
+    print("============================================================")
+    print("Loaded config files:")
+    for l in config_locations:
+        print(l)
