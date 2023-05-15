@@ -37,8 +37,10 @@ def configure():
         config.write(f)
 
 if __name__ == "__main__":
+    from pathlib import Path
     config.write(sys.stdout)
     print("============================================================")
     print("Loaded config files:")
     for l in config_locations:
-        print(l)
+        exists = "exists" if Path(l).exists() else "does not exist"
+        print(f"{l}: {exists}")
