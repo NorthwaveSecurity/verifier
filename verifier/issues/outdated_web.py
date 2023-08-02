@@ -163,6 +163,24 @@ class OutdatedPLUpload(OutdatedWebHeaderComment):
         super(OutdatedWeb, self).__init__(*args, **kwargs)
 
 
+class OutdatedHighcharts(OutdatedWebHeaderComment):
+    _software = "Highcharts JS"
+    version_prefix = "v"
+
+    @property
+    def vuln_link(self):
+        return f"https://snyk.io/package/npm/highcharts/{self._version}"
+
+
+class OutdatedFroala(OutdatedWebHeaderComment):
+    _software = "froala_editor"
+    version_prefix = "v"
+
+    @property
+    def vuln_link(self):
+        return f"https://security.snyk.io/package/npm/froala-editor/{self._version}"
+
+
 add_issue('outdated-web', OutdatedWeb)
 add_issue('outdated-bootstrap', OutdatedBootstrap)
 add_issue('outdated-jquery', OutdatedJQuery)
@@ -173,3 +191,5 @@ add_issue('outdated-modernizr', OutdatedModernizr)
 add_issue('outdated-plupload', OutdatedPLUpload)
 add_issue('outdated-nginx', OutdatedNginx)
 add_issue('outdated-vsftpd', OutdatedVSFTPd)
+add_issue('outdated-highcharts', OutdatedHighcharts)
+add_issue('outdated-froala', OutdatedFroala)
