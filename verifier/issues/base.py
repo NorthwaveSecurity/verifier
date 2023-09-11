@@ -1,4 +1,5 @@
 from ..util import prepend_command, run_command, PostProcessingFailed
+from ..config import config
 from collections import defaultdict
 
 
@@ -80,7 +81,7 @@ class CommandIssue(Issue):
                 output = self.content['output']
         else:
             if self.proxychains:
-                command = ['proxychains'] + command
+                command = [config.get('proxy', 'proxychains_path')] + command
             output = run_command(command, visual_command=visual_command, sudo=self.sudo, do_prepend_command=do_prepend_command, stdin=stdin)
         try:
             new_output = self.postprocess(output)
