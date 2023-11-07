@@ -15,6 +15,8 @@ class DNSSec(DigIssue):
         output_str = self.run_command(command)
         regex = r'(?<=;; )flags: .*;'
         flags = re.search(regex, output_str)
+        if "ANSWER: 0" in output_str:
+            raise Exception("No answer section, did you provide the correct hostname?")
         if 'ad' in flags.group(0):
             raise IssueDoesNotExist()
         output_str = self.postprocess(output_str)
