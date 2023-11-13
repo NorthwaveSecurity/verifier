@@ -51,7 +51,7 @@ p. Cookies without {} flag:
                     continue
                 new_cookie_header.append(morsel.OutputString())
 
-            return cookie_header_match.group(1) + ', '.join(new_cookie_header)
+            return cookie_header_match.group(1) + ' '.join(new_cookie_header)
 
         return re.sub(r"(Set-Cookie: )([^\n\r]+)", handle_cookie_header, response, flags=re.IGNORECASE)
 
