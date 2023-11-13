@@ -1,4 +1,4 @@
-from .base import CommandIssue, add_issue
+from .base import CommandIssue, add_issue, Evidence
 from ..util import host_to_args, highlight, IssueDoesNotExist
 import re
 
@@ -79,7 +79,7 @@ bc.. {{}}
             port = self.port
         command = self.command(host, port=port)
         output_str = self.run_command(command)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class DNSCacheSnoop(NmapIssue):
@@ -109,7 +109,7 @@ class DNSRecursion(NmapIssue):
         output_str = self.run_command(command)
         if self.trigger not in output_str:
             raise IssueDoesNotExist()
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class MDNSServiceDiscovery(NmapIssue):
@@ -120,7 +120,7 @@ class MDNSServiceDiscovery(NmapIssue):
         command = ['sudo', 'nmap', '-sU', '--script=dns-service-discovery', '-p', str(port)] + host_to_args(host)
         output_str = self.run_command(command)
         output_str = self.postprocess(output_str)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class SSHAlgos(NmapIssue):
@@ -130,7 +130,7 @@ class SSHAlgos(NmapIssue):
     def verify(self, host, port=22):
         command = ['nmap', '-Pn', '--script', self.nse, '-p', str(port)] + host_to_args(host)
         output_str = self.run_command(command)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class OutdatedNmapIssue(NmapIssue):
@@ -173,7 +173,10 @@ class OutdatedNmapIssue(NmapIssue):
         if not match:
             raise IssueDoesNotExist()
         self.version = match.group(1)
-        yield self.template.format(output_str)
+        evidence = Evidence(self.template.format(output_str))
+        evidence.version = self.version
+        evidence.software = self.software
+        yield evidence
 
 
 class OutdatedMSSQL(OutdatedNmapIssue):
@@ -201,7 +204,7 @@ class SMBSigning(NmapIssue):
         if trigger not in output_str:
             raise IssueDoesNotExist()
         output_str = highlight(output_str, trigger)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class RDPNLA(NmapIssue):
@@ -218,7 +221,7 @@ class RDPNLA(NmapIssue):
         if match.group(1) == "SUCCESS":
             raise IssueDoesNotExist()
         output_str = highlight(output_str, regex)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
         
 
 add_issue('dns-cache-snoop', DNSCacheSnoop)

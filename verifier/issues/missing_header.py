@@ -1,4 +1,4 @@
-from .base import add_issue, add_expansion
+from .base import add_issue, add_expansion, Evidence
 from .dradis_curl_issue import DradisCurlIssue
 from ..util import host_to_url, highlight, IssueDoesNotExist
 
@@ -51,7 +51,11 @@ p. {}.""",
         request, response = self.do_request(url)
         if self.check_header(response):
             raise IssueDoesNotExist()
-        yield self.format_template(request, response)
+        evidence = Evidence(self.format_template(request, response))
+        evidence.request = request
+        evidence.response = response
+        yield evidence
+
 
     @property
     def description(self):
@@ -116,14 +120,20 @@ class ContentSecurityPolicy(MissingHeader):
             if any([t in response.headers.get(self.header) for t in triggers]):
                 response_str = highlight(str(response), '|'.join(triggers))
                 self.problem = "unsafe"
-                yield self.format_template(request, response_str)
+                evidence = Evidence(self.format_template(request, response_str))
+                evidence.problem = self.problem
+                yield evidence
             if not self.check_frame_ancestors(response):
                 self.problem = "frame_ancestors"
                 response_str = highlight(str(response), r'Content-Security-Policy:[^\n]+')
-                yield self.format_template(request, response_str)
+                evidence = Evidence(self.format_template(request, response_str))
+                evidence.problem = self.problem
+                yield evidence
         else:
             self.problem = "missing"
-            yield self.format_template(request, response)
+            evidence = Evidence(self.format_template(request, response))
+            evidence.problem = self.problem
+            yield evidence
         if not self.problem:
             raise IssueDoesNotExist()
 

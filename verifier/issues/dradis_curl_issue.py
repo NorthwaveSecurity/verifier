@@ -53,7 +53,10 @@ bc.. {}""")
 
     def verify(self, host):
         req, resp = self.do_request(host)
-        yield format_request_response(req, resp)
+        evidence = Evidence(output=format_request_response(req, resp))
+        evidence.req = req
+        evidence.resp = resp
+        yield evidence
 
 
 add_issue('dradis-curl', DradisCurlIssue)

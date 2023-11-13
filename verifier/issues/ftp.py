@@ -1,4 +1,4 @@
-from .base import add_issue, CommandIssue
+from .base import add_issue, CommandIssue, Evidence
 from ..util import get_translation
 
 
@@ -24,7 +24,7 @@ p. {}."""
 
     def verify(self, host):
         output = self.run_command(['ftp', '-nv', host], stdin=self.stdin)
-        yield self.template.format(output.strip())
+        yield Evidence(self.template.format(output.strip()))
 
 
 add_issue('ftp', FTP)

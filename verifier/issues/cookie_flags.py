@@ -1,5 +1,5 @@
 from .dradis_curl_issue import DradisCurlIssue
-from .base import add_issue, add_expansion, Issue
+from .base import add_issue, add_expansion, Issue, Evidence
 from ..util import IssueDoesNotExist
 import re
 from ..config import config
@@ -57,7 +57,9 @@ p. Cookies without {} flag:
         response = self.process_response(str(response))
         if not self.cookies:
             raise IssueDoesNotExist
-        yield self.template.format(request, response, self.cookie_flag, self.format_cookies())
+        evidence = Evidence(self.template.format(request, response, self.cookie_flag, self.format_cookies()))
+        evidence.cookies = self.cookies
+        yield evidence
 
 
 class HTTPOnlyFlag(CookieFlags):
@@ -66,6 +68,7 @@ class HTTPOnlyFlag(CookieFlags):
 
 class SecureFlag(CookieFlags):
     cookie_flag = "Secure"
+
 
 class Cookie_Flags_Browser(CookieFlags):
     cookie_flag = None
@@ -98,7 +101,9 @@ class Cookie_Flags_Browser(CookieFlags):
                 self.cookies.append(c.name)
         if not self.cookies:
             raise IssueDoesNotExist()
-        yield self.template.format(self.cookie_flag, self.format_cookies())
+        evidence = Evidence(self.template.format(self.cookie_flag, self.format_cookies()))
+        evidence.cookies = self.cookies
+        yield evidence
 
 
 class SecureFlag_Browser(SecureFlag, Cookie_Flags_Browser):

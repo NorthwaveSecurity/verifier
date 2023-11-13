@@ -1,5 +1,5 @@
 from .dradis_curl_issue import DradisCurlIssue
-from .base import add_issue
+from .base import add_issue, Evidence
 from ..util import highlight, host_to_url, format_request_response, IssueDoesNotExist
 import re
 
@@ -38,7 +38,10 @@ p. Software: {} version {}.""",
         regex = r'(?i)(?m)^Server: ([^\r\n]+)'
         response = highlight(str(response), regex)
         output_str = format_request_response(request, response)
-        yield self.template.format(output_str, self.software or "TODO", self.version or "TODO")
+        evidence = Evidence(self.template.format(output_str, self.software or "TODO", self.version or "TODO"))
+        evidence.request = request
+        evidence.response = response
+        yield evidence
 
 
 add_issue('server-version', ServerVersion)

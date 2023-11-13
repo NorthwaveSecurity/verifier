@@ -1,4 +1,4 @@
-from .base import add_issue
+from .base import add_issue, Evidence
 from .dradis_curl_issue import DradisCurlIssue
 from ..util import SNIP
 import re
@@ -29,7 +29,10 @@ class StackTrace(DradisCurlIssue):
 
     def verify(self, url):
         request, response = self.do_request(url)
-        yield self.template.format(request, self.edit(response))
+        evidence = Evidence(self.template.format(request, self.edit(response)))
+        evidence.request = request
+        evidence.response = response
+        yield evidence
 
 
 add_issue('stacktrace', StackTrace)

@@ -1,4 +1,4 @@
-from .base import CommandIssue, add_issue, add_expansion
+from .base import CommandIssue, add_issue, add_expansion, Evidence
 import re
 
 class Nuclei(CommandIssue):
@@ -25,7 +25,7 @@ bc.. {}
             ["nuclei", "-nc", "-u",  host] + self.extra_args, 
             ["nuclei", "-u",  host] + self.extra_args
         )
-        yield self.template.format(output)
+        yield Evidence(self.template.format(output))
 
 
 add_issue('nuclei', Nuclei)

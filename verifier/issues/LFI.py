@@ -1,6 +1,6 @@
 import argparse
 from verifier.util import format_request_response
-from .base import add_issue, add_expansion
+from .base import add_issue, add_expansion, Evidence
 from .dradis_curl_issue import DradisCurlIssue, format_request_response
 from ..util import HIGHLIGHT_START, HIGHLIGHT_END, highlight, truncate_response
 
@@ -19,6 +19,6 @@ class Lfi(DradisCurlIssue):
         resp.highlight_body = True
         resp.truncated = 1000
         req = highlight(str(req), self.filename)
-        yield format_request_response(req, resp)
+        yield Evidence(format_request_response(req, resp))
 
 add_issue('lfi', Lfi)

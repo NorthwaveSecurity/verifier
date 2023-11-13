@@ -1,4 +1,4 @@
-from .base import Issue, add_issue, add_expansion
+from .base import Issue, add_issue, add_expansion, Evidence
 from dradis_curl import Request, Response
 from ..util import highlight
 
@@ -33,10 +33,15 @@ bc.. {}""",
         logout_resp_str = highlight(str(logout_resp), highlight_regex)
         request_str = highlight(str(request), highlight_regex)
         response_str = highlight(str(response), highlight_regex)
-        yield self.template.format(
+        evidence = Evidence(self.template.format(
             logout_str, logout_resp_str,
             request_str, response_str
-        )
+        ))
+        evidence.logout_str = logout_str
+        evidence.logout_resp_str = logout_resp_str
+        evidence.request_str = request_str
+        evidence.response_str = response_str
+        yield evidence
 
 
 add_issue('session-after-logout', Sessionafterlogout)

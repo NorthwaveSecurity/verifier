@@ -1,6 +1,19 @@
 from ..util import prepend_command, run_command, PostProcessingFailed
 from ..config import config
 from collections import defaultdict
+from dataclasses import dataclass
+
+
+@dataclass
+class Evidence:
+    output: str
+    id: int = None
+    host: 'typing.Any' = None
+    lang: str = "en"
+    label: str = None
+
+    def __repr__(self):
+        return output
 
 
 class Issue:
@@ -27,7 +40,7 @@ class Issue:
             self.handle_proxy(proxy)
 
     def verify(self):
-        """Should yield evidences"""
+        """Should yield Evidences"""
         raise NotImplementedError()
 
     def parse_args(self, args):

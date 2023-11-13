@@ -1,4 +1,4 @@
-from .base import Issue, add_issue
+from .base import Issue, add_issue, Evidence
 import re
 from ..util import highlight, format_request_response, IssueDoesNotExist
 
@@ -20,7 +20,7 @@ class Cors(Issue):
             raise IssueDoesNotExist()
         request = highlight(request, origin_regex)
         response = highlight(response, access_control_regex)
-        yield self.template.format(format_request_response(request, response))
+        yield Evidence(self.template.format(format_request_response(request, response)))
 
 
 add_issue('cors', Cors)

@@ -1,4 +1,4 @@
-from .base import CommandIssue, add_expansion, add_issue
+from .base import CommandIssue, add_expansion, add_issue, Evidence
 from ..util import SNIP, IssueDoesNotExist, HIGHLIGHT_START, HIGHLIGHT_END
 from collections import defaultdict
 
@@ -28,7 +28,7 @@ p. {}""",
 
     def verify(self, host):
         result = self.run_sslyze(host)
-        yield self.template.format(self.header, result.rstrip(), self.footer)
+        yield Evidence(self.template.format(self.header, result.rstrip(), self.footer))
 
     def postprocess(self, output):
         i = output.index("COMPLIANCE AGAINST MOZILLA")

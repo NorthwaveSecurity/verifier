@@ -1,4 +1,4 @@
-from .base import CommandIssue, add_issue
+from .base import CommandIssue, add_issue, Evidence
 from ..util import host_to_url, get_translation
 import os
 import copy
@@ -56,7 +56,7 @@ p. {}.""",
     def verify(self, url, args=None):
         url = self.edit_url(url)
         output_str = self.edit(self.run(url, args))
-        yield self.template.format(output_str.strip())
+        yield Evidence(self.template.format(output_str.strip()))
 
 
 add_issue('curl', Curl)

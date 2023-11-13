@@ -1,5 +1,5 @@
 from .dig import DigIssue
-from .base import add_issue
+from .base import add_issue, Evidence
 from ..util import highlight, IssueDoesNotExist
 import re
 
@@ -16,7 +16,7 @@ class DNSSec(DigIssue):
             raise IssueDoesNotExist()
         output_str = self.postprocess(output_str)
         output_str = highlight(output_str, regex)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 class NSEC(DigIssue):
@@ -28,7 +28,7 @@ class NSEC(DigIssue):
         if output_str.count(host) < 2:
             raise IssueDoesNotExist()
         output_str = self.postprocess(output_str)
-        yield self.template.format(output_str)
+        yield Evidence(self.template.format(output_str))
 
 
 add_issue('dnssec', DNSSec)

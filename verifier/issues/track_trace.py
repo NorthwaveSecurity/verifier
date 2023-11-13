@@ -1,4 +1,4 @@
-from .base import add_issue, add_expansion
+from .base import add_issue, add_expansion, Evidence
 from .dradis_curl_issue import DradisCurlIssue
 from ..util import IssueDoesNotExist
 
@@ -26,7 +26,11 @@ bc.. {}""",
     def verify(self, url):
         request, response = self.do_request(url, method=self._method, body=False, allow_redirects=True)
         self.check(response)
-        yield self.template.format(self._method, request, response, self._method)
+        evidence = Evidence(self.template.format(self._method, request, response, self._method))
+        evidence.request = request
+        evidence.response = response
+        yield evidence
+
 
     @property
     def description(self):

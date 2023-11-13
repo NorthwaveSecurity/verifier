@@ -1,4 +1,4 @@
-from .base import Issue, add_issue
+from .base import Issue, add_issue, Evidence
 from collections import defaultdict
 from ..util import run_command
 
@@ -59,7 +59,7 @@ class NmapPortScan(Issue):
     def verify(self, target):
         self.run_scan(target, 'tcp')
         self.run_scan(target, 'udp')
-        yield self.generate_output(target)
+        yield Evidence(self.generate_output(target))
 
 
 add_issue("portscan", NmapPortScan)

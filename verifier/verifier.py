@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 import json
 import logging
 import sys
 
 from verifier.evidence_savers import evidence_saver
 from .issues import issues, expansions, get_issue
+from .issues.base import Evidence
 from .util import IssueDoesNotExist
 from .config import config, configure
 from .content_reader import read_content
@@ -26,30 +27,19 @@ def print_output(output_str, issue_id=None):
     print(output_str)
 
 
-@dataclass
-class Evidence:
-    id: int
-    host: 'typing.Any'
-    output: str
-    lang: str = "en"
-    label: str = None
-
-
 def get_evidence_host(id, host, lang="en", content=None, extra_args=None, label=None, **kwargs):
     issue = get_issue(id, lang=lang, content=content, extra_args=extra_args, **kwargs)
     if isinstance(host, dict):
         outputs = issue.verify(**host)
         host = host['host']
     else:
-        outputs = issue.verify(host)
-    for output in outputs:
-        yield Evidence(
-            id=id,
-            host=host,
-            label=label,
-            output=output,
-            lang=lang,
-        )
+        evidences = issue.verify(host)
+    for evidence in evidences:
+        evidence.id = id
+        evidence.host = host
+        evidence.label = label
+        evidence.lang = lang
+        yield evidence
 
 
 def process_evidence(evidence: Evidence, evidence_saver=None):

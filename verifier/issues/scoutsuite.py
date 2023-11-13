@@ -1,4 +1,4 @@
-from .base import add_issue, add_expansion, Issue
+from .base import add_issue, add_expansion, Issue, Evidence
 from ..util import host_to_url, HIGHLIGHT_START, HIGHLIGHT_END, IssueDoesNotExist
 import os
 from os.path import join
@@ -60,7 +60,7 @@ Type: {highlighted_user}
 
 --snip--
 {self.subscript}: {HIGHLIGHT_START}{len(items)}{HIGHLIGHT_END}"""
-        yield self.get_template(info)
+        yield Evidence(self.get_template(info))
 
 
 add_issue('guest-users', GuestUsers)
