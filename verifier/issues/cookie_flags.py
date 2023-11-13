@@ -3,7 +3,7 @@ from .base import add_issue, add_expansion, Issue, Evidence
 from ..util import IssueDoesNotExist
 import re
 from ..config import config
-from http.cookies import SimpleCookie
+from http.cookies import BaseCookie
 
 
 class CookieFlags(DradisCurlIssue):
@@ -43,7 +43,7 @@ p. Cookies without {} flag:
                     self.cookies.append(cookie)
                     return "$${{" + all + "}}$$"
 
-            cookie = SimpleCookie()
+            cookie = BaseCookie()
             cookie.load(cookie_header_match.group(2))
             new_cookie_header = []
             for cookie,morsel in cookie.items():
@@ -61,7 +61,7 @@ p. Cookies without {} flag:
                     continue
                 new_cookie_header.append(morsel.OutputString())
 
-            return cookie_header_match.group(1) + ', '.join(new_cookie_header)
+            return cookie_header_match.group(1) + ' '.join(new_cookie_header)
 
         return re.sub(r"(Set-Cookie: )([^\n\r]+)", handle_cookie_header, response, flags=re.IGNORECASE)
 
