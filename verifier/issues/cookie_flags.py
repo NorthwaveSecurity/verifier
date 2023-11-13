@@ -3,6 +3,7 @@ from .base import add_issue, add_expansion, Issue, Evidence
 from ..util import IssueDoesNotExist
 import re
 from ..config import config
+from http.cookies import SimpleCookie
 
 
 class CookieFlags(DradisCurlIssue):
@@ -24,8 +25,12 @@ p. Cookies without {} flag:
     def description(self):
         return f"Verify that the cookie does not have the {self.cookie_flag} flag set"
 
+    def check_flag(self, value):
+        """ Check if the value is correctly set """
+        return bool(value)
+
     def process_response(self, response):
-        self.cookies = []
+        self.cookies = {}
 
         def handle_cookie_header(cookie_header_match):
             def handle_cookie(match):
@@ -38,18 +43,32 @@ p. Cookies without {} flag:
                     self.cookies.append(cookie)
                     return "$${{" + all + "}}$$"
 
+            cookie = SimpleCookie()
+            cookie.load(cookie_header_match.group(2))
             new_cookie_header = []
-            for cookie in cookie_header_match.group(2).split(','):
-                cookie = re.sub(self.cookie_regex, handle_cookie, cookie, flags=re.IGNORECASE)
-                new_cookie_header.append(cookie)
-            return cookie_header_match.group(1) + ','.join(new_cookie_header)
+            for cookie,morsel in cookie.items():
+                try:
+                    value = morsel[self.cookie_flag.lower()]
+                    if not self.check_flag(value):
+                        # Flag value is incorrect
+                        new_cookie_header.append("$${{" + morsel.OutputString() + "}}$$")
+                        self.cookies[cookie] = morsel
+                        continue
+                except AttributeError as e:
+                    print(e)
+                    new_cookie_header.append("$${{" + morsel.OutputString() + "}}$$")
+                    self.cookies[cookie] = morsel
+                    continue
+                new_cookie_header.append(morsel.OutputString())
+
+            return cookie_header_match.group(1) + ', '.join(new_cookie_header)
 
         return re.sub(r"(Set-Cookie: )([^\n\r]+)", handle_cookie_header, response, flags=re.IGNORECASE)
 
     def format_cookies(self):
         builder = []
-        for c in self.cookies:
-            builder.append(f"* {c}")
+        for c in self.cookies.keys():
+            builder.append(f"* {c.strip()}")
         return "\n".join(builder)
 
     def verify(self, url):
