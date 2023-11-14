@@ -202,7 +202,7 @@ class Issue:
 To create a new issue create a new file in the `issues` directory, this file should have content like the following:
 
 ----
-from .base import add_issue, Issue
+from .base import add_issue, Issue, Evidence
 
 class NewIssue(Issue):
     # This template is later converted to language-specific using self.template
@@ -218,7 +218,7 @@ class NewIssue(Issue):
 
     def verify(self, host):
         ...
-        yield self.template.format(...)
+        yield Evidence(self.template.format(...))
 
 add_issue('new-issue', NewIssue)
 ----
