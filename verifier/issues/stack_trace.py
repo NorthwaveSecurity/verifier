@@ -9,7 +9,7 @@ class StackTrace(DradisCurlIssue):
     stacktrace_started = False
 
     def is_stacktrace_line(self, line):
-        start_regex = re.compile(r"line \d+|Exception in thread|stack-error|Caused by:|Error:")
+        start_regex = re.compile(r"line \d+|Exception in thread|stack-error|Caused by:|Error:|<b>Exception</b>")
         stacktrace_regex = re.compile(r"at .*?\(|[\w\.\d]+\([\w\d]+\.(java|js):\d+\)")
         if start_regex.search(line):
             self.stacktrace_started = True
