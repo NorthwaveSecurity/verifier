@@ -7,10 +7,13 @@ import re
 class DNSSec(DigIssue):
     description = "Verify that DNSSEC is not configured"
 
-    def verify(self, host, dns_server="8.8.8.8"):
-        command = ['dig', f"@{dns_server}", host, '+dnssec', '+multi']
-        regex = r'(?<=;; )flags: .*;'
+    def verify(self, host):
+        check_http = re.match(r"^https?://(.*)$", host)
+        if check_http:
+            host = check_http.group(1)
+        command = [host, '+dnssec', '+multi']
         output_str = self.run_command(command)
+        regex = r'(?<=;; )flags: .*;'
         flags = re.search(regex, output_str)
         if 'ad' in flags.group(0):
             raise IssueDoesNotExist()
@@ -23,7 +26,7 @@ class NSEC(DigIssue):
     description = "Verify that NSEC is configured"
 
     def verify(self, host):
-        command = ['dig', '+short', "NSEC", host]
+        command = [host, '+short', "NSEC"]
         output_str = self.run_command(command)
         if output_str.count(host) < 2:
             raise IssueDoesNotExist()
