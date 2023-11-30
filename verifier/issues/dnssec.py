@@ -11,6 +11,8 @@ class DNSSec(DigIssue):
         check_http = re.match(r"^https?://(.*)$", host)
         if check_http:
             host = check_http.group(1)
+        if "/" in host:
+            host = host.split("/")[0]
         command = [host, '+dnssec', '+multi']
         output_str = self.run_command(command)
         regex = r'(?<=;; )flags: .*;'
