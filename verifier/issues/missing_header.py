@@ -153,4 +153,6 @@ add_expansion('all-missing-headers', [
     'x-content-type-options',
     'strict-transport-security',
     'content-security-policy',
+    #'x-frame-options' is obsolete since the frame-ancestors directive in content-security-policy
+    #'x-xss-protection' is obsolete since it is included in content-security-policy nowadays
 ])
