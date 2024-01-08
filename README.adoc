@@ -144,6 +144,7 @@ p. TODO.
 === Environment variables
 
 COOKIE: The content of the cookies header that should be sent with requests.
+VERIFIER_CONFIG: An additional config file to use. This can be used for overriding the global config on a project-specific basis
 
 === Start test
 

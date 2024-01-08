@@ -8,6 +8,9 @@ config_locations = [
     os.path.join(os.path.dirname(__file__), '../config.ini'),
     user_config,
 ]
+if 'VERIFIER_CONFIG' in os.environ:
+    config_locations.append(os.environ['VERIFIER_CONFIG'])
+
 config = configparser.ConfigParser()
 config.default_section = "fallback"
 for config_location in config_locations:
