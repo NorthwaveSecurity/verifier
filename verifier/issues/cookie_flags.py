@@ -33,16 +33,6 @@ p. Cookies without {} flag:
         self.cookies = {}
 
         def handle_cookie_header(cookie_header_match):
-            def handle_cookie(match):
-                cookie = match.group(1)
-                flags = match.group(2)
-                all = match.group(0)
-                if self.cookie_flag in flags:
-                    return all
-                else:
-                    self.cookies.append(cookie)
-                    return "$${{" + all + "}}$$"
-
             cookie = BaseCookie()
             cookie.load(cookie_header_match.group(2))
             new_cookie_header = []
@@ -114,10 +104,10 @@ class Cookie_Flags_Browser(CookieFlags):
         cookie_file = config.get('cookie_flags', 'cookie_file', fallback=None)
         get_cookies = self.get_function()
         cj = get_cookies(cookie_file, domain)
-        self.cookies = []
+        self.cookies = {}
         for c in cj:
             if not self.check_cookie(c):
-                self.cookies.append(c.name)
+                self.cookies[c.name] = c
         if not self.cookies:
             raise IssueDoesNotExist()
         evidence = Evidence(self.template.format(self.cookie_flag, self.format_cookies()))
