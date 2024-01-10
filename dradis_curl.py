@@ -7,6 +7,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.structures import CaseInsensitiveDict
 from os import environ
 import re
+from verifier.cookies import Cookie
+from urllib3._collections import HTTPHeaderDict
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 user_agent = config.get('dradis_curl', 'user_agent', fallback='Issue verifier')
@@ -24,11 +27,11 @@ class RequestResponse:
 
     def parse(self, text):
         self.headers_string, _, self.text = text.partition('\n\n')
-        self.headers = CaseInsensitiveDict()
+        self.headers = HTTPHeaderDict()
         for header in self.headers_string.splitlines():
             if ':' in header:
                 key, _, value = header.partition(':')
-                self.headers[key] = value.lstrip()
+                self.headers.add(key, value.lstrip())
 
     def __repr__(self):
         string = []
@@ -43,9 +46,18 @@ class RequestResponse:
         def replace_func1(matchobj):
             return matchobj.group(1) + re.sub(r"([^=;]+=)([^;]*)(;?)", replace_func, matchobj.group(2))
 
+        def replace_func2(matchobj):
+            cookies = Cookie()
+            cookies.load(matchobj.group(2))
+            if str(cookies) == "":
+                return matchobj.group(1) + "[REDACTED]"
+            for cookie,morsel in cookies.items():
+                morsel._coded_value = "[REDACTED]"
+            return matchobj.group(1) + cookies.output()
+
         for header in self.headers_string.splitlines():
             header = re.sub(r"(^Cookie: )(.*)$", replace_func1, header)
-            header = re.sub(r"(^Set-Cookie: [^=]+=)([^;]+)()", replace_func, header)
+            header = re.sub(r"(^Set-Cookie: )(.*)$", replace_func2, header)
             header = re.sub(r"(^Authorization: \w+ )(.*)()$", replace_func, header)
             string.append(header.rstrip())
 

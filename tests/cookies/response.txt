@@ -1,0 +1,19 @@
+[request]
+GET / HTTP/2
+Host: localhost
+User-Agent: Northwave issue verifier
+Accept-Encoding: gzip, deflate, br
+Accept: */*
+Connection: keep-alive
+[response]
+HTTP/2 302 Found
+Set-Cookie: a=xyz;Path=/;expires=Wednesday, 09-Nov-1999 23:12:40 GMT;Secure
+Set-Cookie: b=xyz;Path=/;expires=Wednesday, 09-Nov-1999 23:12:40 GMT;Secure
+Set-Cookie: c=xyz;Path=/;expires=Wednesday, 09-Nov-1999 23:12:40 GMT
+Set-Cookie: d=xyz;Path=/;expires=Wednesday, 09-Nov-1999 23:12:40 GMT;Secure
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Content-Length: 398
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Content-Type: text/html; charset=utf-8
