@@ -102,30 +102,44 @@ def expand_issues(issues):
     return expanded
 
 
-def print_table(rows, separator_size=4):
+def print_table(rows, separator_size=4, indent=0):
     """
     rows must be a list of 2-tuples
     """
+    indent=" "*indent
     first_column_length = max([len(first) for first, _ in rows])
-    format_string = "{:<" + str(first_column_length) + "}" + " "*separator_size + "{}"
+    format_string = "{}{:<" + str(first_column_length) + "}" + " "*separator_size + "{}"
     for first, second in rows:
-        print(format_string.format(first, second))
+        print(format_string.format(indent, first, second))
 
 
 def show_issue_list(args, extra_args):
-    print("Issues:")
-    rows = []
-    for id, issue in issues.items():
-        description = issue().description or ""
-        rows.append((id, description))
-    print_table(rows)
+    done = set()
+    print("Issue groups:")
+    indent = 4
+    for expansion, issue_list in expansions.items():
+        print("{}{}:".format(" "*indent, expansion))
+        rows = []
+        for id in issue_list:
+            issue = issues.get(id)
+            if not issue:
+                # id is a group
+                rows.append((id, "Issue group"))
+            else:
+                description = issue().description or ""
+                rows.append((id, description))
+            done.add(id)
+        print_table(rows, indent=8)
 
     print()
-    print("Issue groups:")
+    print("Other issues")
     rows = []
-    for expansion, issue_list in expansions.items():
-        rows.append((expansion, ', '.join(issue_list)))
-    print_table(rows)
+    for id, issue in issues.items():
+        if id in done:
+            continue
+        description = issue().description or ""
+        rows.append((id, description))
+    print_table(rows, indent=4)
 
 
 def main():
