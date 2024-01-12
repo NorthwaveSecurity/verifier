@@ -3,6 +3,7 @@ from dataclasses import asdict
 import json
 import logging
 import sys
+import os
 
 from verifier.evidence_savers import evidence_saver
 from .issues import issues, expansions, get_issue
@@ -142,6 +143,11 @@ def show_issue_list(args, extra_args):
     print_table(rows, indent=4)
 
 
+def get_proxy():
+    return os.environ.get('HTTPS_PROXY',
+             os.environ.get('HTTP_PROXY', None))
+
+
 def main():
     import argparse
     import argcomplete
@@ -149,6 +155,8 @@ def main():
     logging.getLogger().setLevel(logging.INFO)
 
     def verify_caller(args, extra_args):
+        if args.proxy:
+            logging.info(f"Using proxy server: {args.proxy}")
         if args.content:
             content = read_content(args.content)
         else:
@@ -195,7 +203,7 @@ def main():
     verify_parser.add_argument("-l", "--lang", choices=["en", "nl"], default="en", help="Reporting language")
     verify_parser.add_argument("-c", "--content", help="File with content for the evidences, e.g. request, response, in the format described in the README")
     verify_parser.add_argument("-L", "--label", help="Different label for the location in the issue")
-    verify_parser.add_argument("--proxy", nargs='?', help="Use the given proxy server, insert anything to use proxychains")
+    verify_parser.add_argument("--proxy", nargs='?', help="Use the given proxy server, insert anything to use proxychains", default=get_proxy())
     verify_parser.set_defaults(func=verify_caller)
 
     import_parser = subparsers.add_parser("import", help="Import results from file")

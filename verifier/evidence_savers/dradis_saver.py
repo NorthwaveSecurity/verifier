@@ -11,7 +11,7 @@ class EvidenceSaver(Base):
         api_token = config['DEFAULT']['api_token']
         url = config['DEFAULT']['url']
         from dradis import Dradis
-        self.dradis = Dradis(api_token, url)
+        self.dradis = Dradis(api_token, url, trust_env=False)
 
     def save_evidence(self, evidence):
         issue = get_issue(evidence.id, lang=evidence.lang)
