@@ -13,7 +13,7 @@ class Evidence:
     label: str = None
 
     def __repr__(self):
-        return output
+        return self.output
 
 
 class Issue:

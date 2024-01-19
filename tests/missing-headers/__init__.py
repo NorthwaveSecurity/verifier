@@ -10,7 +10,19 @@ class MissingHeadersTest(unittest.TestCase):
 
     def test_missing_headers(self):
         content = read_content(join(dir, 'example.com.txt'))
-        list(verify(['all-missing-headers'], ['example.com'], content=content))
+        results = list(verify([
+            'x-xss-protection',
+            'x-frame-options',
+            'x-content-type-options',
+            'content-security-policy'
+        ] , ['example.com'], content=content))
+        for r in results:
+            self.assertNotIn("over HTTPS", str(r))
+
+    def test_hsts(self):
+        content = read_content(join(dir, 'example.com.txt'))
+        results = list(verify(['strict-transport-security'], ['example.com'], content=content))
+        self.assertIn("over HTTPS", str(results[0]))
 
     def test_missing_frame_ancestors(self):
         content = read_content(join(dir, 'missing-frame-ancestors.txt'))

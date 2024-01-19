@@ -10,6 +10,7 @@ class MissingHeader(DradisCurlIssue):
         "en": "Missing header: {}",
         "nl": "Ontbrekende header: {}"
     }
+    suffix = ""
     _template = {
         "en": """p. Request:
 
