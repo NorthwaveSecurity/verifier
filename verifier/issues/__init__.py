@@ -17,6 +17,7 @@ from . import path_disclosure
 from . import portscan
 from . import sslyze
 from . import scoutsuite
+from . import crackmapexec
 from .base import Issue, CommandIssue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
