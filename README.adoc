@@ -33,10 +33,14 @@ Build the docker container:
 
     make docker
 
-Then run the container:
+Setup and configure the verifier application (make sure to add your dradis API key):
 
-    docker run --rm -it verifier --help
-    docker run --rm -it verifier verify ...
+    docker run --name verifier_container -it verifier configure
+
+Run verifier through docker:
+
+    docker start verifier_container
+    docker exec -it verifier_container verifier verify ...
 
 === Nmap support
 
