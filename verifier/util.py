@@ -9,7 +9,9 @@ HIGHLIGHT_START = r"$${{"
 HIGHLIGHT_END = r"}}$$"
 
 
-def highlight(string, regex):
+def highlight(string, regex=None):
+    if not regex:
+        return HIGHLIGHT_START + string + HIGHLIGHT_END
     return re.sub(regex, HIGHLIGHT_START + r"\g<0>" + HIGHLIGHT_END, string)
 
 
