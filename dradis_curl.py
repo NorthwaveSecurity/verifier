@@ -124,6 +124,19 @@ class Response(RequestResponse):
 
         super().__init__(**kwargs)
 
+    def parse(self, text):
+        super().parse(text)
+        first_line = self.headers_string.partition('\n')[0].split(' ')
+        self.status_code = int(first_line[1])
+        self.reason = first_line[2]
+
+    @property
+    def ok(self):
+        if self._resp:
+            return self._resp.ok
+        else:
+            return self.status_code < 400
+
     def __getattr__(self, key):
         return getattr(self._resp, key)
 
