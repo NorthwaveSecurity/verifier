@@ -36,9 +36,6 @@ p. {}.""",
             _footer = self._footer
         return _footer[self.language].format(self.header or "mentioned")
 
-    def middle(self):
-        return self._middle[self.language]
-
     def format_template(self, request, response):
         return self.template.format(request, response, self.footer())
 
@@ -81,11 +78,9 @@ class ContentSecurityPolicy(MissingHeader):
     header = 'Content-Security-Policy'
     _footer_unsafe = {
         "en": "This shows that the {} header contains unsafe directives",
-        "nl": "Dit laat zien dat de {} header unsafe directives bevat"
     }
     _footer_frame_ancestors = {
         "en": "This shows that the 'frame-ancestors' directive in the {} header is not set correctly",
-        "nl": "Dit toont aan dat het 'frame-ancestors' directive in de {} header niet correct is ingesteld"
     }
     header_present = False
     problem = None
@@ -97,12 +92,6 @@ class ContentSecurityPolicy(MissingHeader):
             if key == 'frame-ancestors' and ("'none'" in value or "'self'" in value):
                 return True
         return False 
-
-    def middle(self):
-        match self.problem:
-            case "missing":
-                return super().middle()
-        return ""                
 
     def footer(self):
         match self.problem:
