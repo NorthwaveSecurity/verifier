@@ -20,15 +20,6 @@ p. Response:
 bc.. {}
 
 p. {}.""",
-        "nl": """p. Request:
-
-bc.. {}
-
-p. Response:
-
-bc.. {}
-
-p. {}.""",
     }
 
     def check_header(self, response):
@@ -43,6 +34,9 @@ p. {}.""",
         if not _footer:
             _footer = self._footer
         return _footer[self.language].format(self.header or "mentioned")
+
+    def middle(self):
+        return self._middle[self.language]
 
     def format_template(self, request, response):
         return self.template.format(request, response, self.footer())
@@ -101,7 +95,13 @@ class ContentSecurityPolicy(MissingHeader):
             key, _, value = part.strip().partition(' ')
             if key == 'frame-ancestors' and ("'none'" in value or "'self'" in value):
                 return True
-        return False
+        return False 
+
+    def middle(self):
+        match self.problem:
+            case "missing":
+                return super().middle()
+        return ""                
 
     def footer(self):
         match self.problem:

@@ -92,6 +92,8 @@ class Request(RequestResponse):
             self.url = '/' + '/'.join(split_url[3:])
 
             self.host = split_url[2]
+            if ":" in self.host:
+                self.host = self.host.partition(':')[0]
             self.headers_string = '{} HTTP/1.1\r\n{}{}'.format(
                 self.method + ' ' + self.url,
                 f"Host: {self.host}\r\n",
