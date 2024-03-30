@@ -2,7 +2,7 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-dradis = ["dradis-api @ git+https://github.com/NorthwaveSecurity/dradis-api.git"]
+dradis = ["dradis-api @ git+https://github.com/NorthwaveSecurity/dradis-api@v1.2"]
 reporter = ['reporter @ git+https://github.com/JJK96/reporter.git']
 cookie_flags_browser = ['browser_cookie3']
 sslyze = ['sslyze']
