@@ -15,7 +15,7 @@ setup(name='Verifier',
       description='Automatically verify security issues',
       author='Jan-Jaap Korpershoek',
       author_email='janjaap.korpershoek@northwave.nl',
-      install_requires=['argcomplete', 'requests', 'cachetools'],
+      install_requires=['argcomplete', 'requests', 'cachetools', 'packaging'],
       entry_points={
         'console_scripts': ['dradis_curl=dradis_curl:main', 'verifier=verifier.verifier:main'],
       },
