@@ -63,7 +63,7 @@ class CME_password_policy(CME):
                 res.append(highlight(line))
             elif "Minimum password length" in line:
                 found = True
-                num = int(re.search("length: (\d+)", line).group(1))
+                num = int(re.search(r"length: (\d+)", line).group(1))
                 if num >= 11:
                     continue
                 res.append(highlight(line))
