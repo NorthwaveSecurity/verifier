@@ -18,8 +18,9 @@ bc.. {}
             if line.startswith("$"):
                 # CMD line
                 res.append(line)
-            if self.trigger in line:
-                res.append(highlight(line, self.trigger))
+            for trigger in self.triggers:
+                if trigger in line:
+                    res.append(highlight(line, trigger))
         if not res:
             raise IssueDoesNotExist()
         yield Evidence(self.template.format("\n".join(res)))
