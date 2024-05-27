@@ -19,6 +19,7 @@ from . import sslyze
 from . import scoutsuite
 from . import crackmapexec
 from . import ssh
+from . import amicontained
 from .base import Issue, CommandIssue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
