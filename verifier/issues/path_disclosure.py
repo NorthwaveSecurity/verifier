@@ -6,14 +6,20 @@ import re
 
 class PathDisclosure(DradisCurlIssue):
     description = "Verify that the response discloses a full path"
-    path_regex = r'(?<!:/)(?<![A-Za-z])(?:[A-Za-z]:)?[\\/]([^\\/:*?"<>|\r\n]+[\\/])+[^\\/:*?"<>|\r\n ]*'
+    path_regexes = [
+        # Windows
+        r'[A-Za-z]:(\\[^/\\<>:"|?*]+){2,}',
+        # Unix
+        r'(?<!:/)(?<![A-Za-z])(/[^/\\<>:"|?*]+){2,}'
+    ]
 
     def edit(self, response):
         def edit_function(line):
-            if re.search(self.path_regex, line):
-                return highlight(line, self.path_regex)
-            else:
-                return False
+            for regex in self.path_regexes:
+                print(regex, line)
+                if re.search(regex, line):
+                    return highlight(line, regex)
+            return False
         return self.edit_body(response, edit_function)
 
     def verify(self, url):
