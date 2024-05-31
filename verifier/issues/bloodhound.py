@@ -48,6 +48,7 @@ bc.. {}
 
 
 class PrivilegedUsersNotInProtectedUsers(Neo4jIssue):
+    description = "Check if all privileged users are in the protected users group"
     query = "MATCH (m:User)-[r:MemberOf*1..]->(n:Group) WHERE n.objectid =~ '(?i)S-1-5-.*-512' return m.samaccountname, m.domain"
     footer = {
         "en": """Query to check membership of Protected Users group:
@@ -82,6 +83,7 @@ bc.. {}
 
 
 class ASREPRoastable(Neo4jIssue):
+    description = "Check if any users are AS-REP roastable"
     query = "MATCH (u:User {dontreqpreauth: true}) RETURN u.samaccountname"
     footer = {
         "en": """AS-REP roastable accounts:
@@ -97,6 +99,7 @@ bc.. {}
 
 
 class PasswordsInDescription(Neo4jIssue):
+    description = "Check for users with the password in the description"
     query = "MATCH (c:User) WHERE c.description IS NOT NULL return c.name,c.description"
     footer = {
         "en": """Accounts with passwords in their description fields:
@@ -113,10 +116,12 @@ bc.. {}
 
 
 class KrbtgtPasswordLastChanged(Neo4jIssue):
+    description = "Check if the Krbtgt password is set regularly"
     query = "MATCH (n:User {samaccountname:'krbtgt'}) RETURN n.pwdlastset"
     footer = {
         "en": "Password of the krbtgt account was last changed on {}."
     }
+    days_threshold = 180
 
     def process_records(self, records):
         import datetime
@@ -125,7 +130,7 @@ class KrbtgtPasswordLastChanged(Neo4jIssue):
         pwdlastset = records[0]['n.pwdlastset']
         ts = datetime.datetime.fromtimestamp(pwdlastset)
         now = datetime.datetime.now()
-        delta = datetime.timedelta(days = 180)
+        delta = datetime.timedelta(days = self.days_threshold)
         if ts < (now - delta):
             return self.template.format(ts)
         else:
@@ -133,6 +138,7 @@ class KrbtgtPasswordLastChanged(Neo4jIssue):
         
 
 class EmptyPasswords(Neo4jIssue):
+    description = "Check if users have empty passwords"
     query =  "MATCH (n:User {enabled: True, passwordnotreqd: True}) RETURN n.samaccountname"
     footer = {
         "en": """Users with empty passwords:
@@ -148,6 +154,7 @@ bc.. {}
 
 
 class AdminLoginsNonDc(Neo4jIssue):
+    description = "Check if domain admins are signed in to non-domain controllers"
     query = "MATCH (n:User)-[:MemberOf]->(g:Group {objectid:'S-1-5-21-1746410392-2068921814-1504938015-512'}) WITH n MATCH p=(c:Computer)-[:HasSession]->(n) where NOT c.name =~ 'DC.*' RETURN p"
     footer = {
         "en": """Last sign in of domain admin to non-domain controller:
