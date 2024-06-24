@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 from dataclasses import asdict
 import json
-import logging
 import sys
 import os
 
-from verifier.evidence_savers import evidence_saver
 from .issues import issues, expansions, get_issue
 from .issues.base import Evidence
 from .util import IssueDoesNotExist
-from .config import config, configure
-from .content_reader import read_content
 from .evidence_savers import evidence_savers
 
 # Keep track of whether an evidence has already been printed, so dividers can be included appropriately

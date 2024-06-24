@@ -17,7 +17,7 @@ setup(name='Verifier',
       author_email='janjaap.korpershoek@northwave.nl',
       install_requires=['argcomplete', 'requests', 'cachetools', 'packaging'],
       entry_points={
-        'console_scripts': ['dradis_curl=dradis_curl:main', 'verifier=verifier.verifier:main'],
+        'console_scripts': ['dradis_curl=dradis_curl:main', 'verifier=verifier:main'],
       },
       packages=find_packages(exclude=["tests", "tests.*"]),
       py_modules=["dradis_curl"],
