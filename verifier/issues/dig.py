@@ -2,7 +2,7 @@ from .base import CommandIssue
 
 
 class DigIssue(CommandIssue):
-    dns_server = None
+    dns_server = "8.8.8.8"
 
     def parse_args(self, args):
         import argparse
