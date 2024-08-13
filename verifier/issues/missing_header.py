@@ -76,14 +76,15 @@ class StrictTransportSecurity(MissingHeader):
 
 class ContentSecurityPolicy(MissingHeader):
     header = 'Content-Security-Policy'
+
+
+class ContentSecurityPolicyUnsafe(ContentSecurityPolicy):
     _footer_unsafe = {
-        "en": "This shows that the {} header contains unsafe directives",
+        "en": "The {} header contains unsafe directives",
     }
     _footer_frame_ancestors = {
-        "en": "This shows that the 'frame-ancestors' directive in the {} header is not set correctly",
+        "en": "The 'frame-ancestors' directive in the {} header is incorrect",
     }
-    header_present = False
-    problem = None
 
     def check_frame_ancestors(self, response):
         header = response.headers.get(self.header)
@@ -92,21 +93,18 @@ class ContentSecurityPolicy(MissingHeader):
             if key == 'frame-ancestors' and ("'none'" in value or "'self'" in value):
                 return True
         return False 
-
+        
     def footer(self):
         match self.problem:
             case "unsafe":
                 return super().footer(self._footer_unsafe)
             case "frame_ancestors":
                 return super().footer(self._footer_frame_ancestors)
-            case "missing":
-                return super().footer(self._footer)
 
     def verify(self, url):
         request, response = self.do_request(url)
         triggers = ['unsafe-inline', 'unsafe-eval']
         if self.check_header(response):
-            self.header_present = True
             if any([t in response.headers.get(self.header) for t in triggers]):
                 response_str = highlight(str(response), '|'.join(triggers))
                 self.problem = "unsafe"
@@ -120,25 +118,22 @@ class ContentSecurityPolicy(MissingHeader):
                 evidence.problem = self.problem
                 yield evidence
         else:
-            self.problem = "missing"
-            evidence = Evidence(self.format_template(request, response))
-            evidence.problem = self.problem
-            yield evidence
-        if not self.problem:
             raise IssueDoesNotExist()
 
     @property
     def description(self):
-        return super().description + " or can be stricter"
+        return "Content-Security-Policy unsafe"
 
 
 add_issue('x-xss-protection', XXSSProtection)
 add_issue('x-frame-options', XFrameOptions)
 add_issue('x-content-type-options', XContentTypeOptions)
 add_issue('strict-transport-security', StrictTransportSecurity)
-add_issue('content-security-policy', ContentSecurityPolicy)
+add_issue('content-security-policy-missing', ContentSecurityPolicy)
+add_issue('content-security-policy-unsafe', ContentSecurityPolicyUnsafe)
 add_issue('missing-header', MissingHeader)
 
+add_expansion('content-security-policy', ['content-security-policy-missing', 'content-security-policy-unsafe'])
 add_expansion('all-missing-headers', [
     'x-content-type-options',
     'strict-transport-security',

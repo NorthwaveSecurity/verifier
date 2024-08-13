@@ -28,6 +28,10 @@ class MissingHeadersTest(unittest.TestCase):
         content = read_content(join(dir, 'missing-frame-ancestors.txt'))
         list(verify(['content-security-policy'], ['example.com'], content=content))
 
+    def test_unsafe_csp(self):
+        content = read_content(join(dir, 'unsafe-csp.txt'))
+        list(verify(['content-security-policy'], ['example.com'], content=content))
+        
 
 if __name__ == '__main__':
     unittest.main()
