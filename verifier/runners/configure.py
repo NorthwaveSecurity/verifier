@@ -2,7 +2,7 @@ from .base import Runner as Base
 from ..config import configure
 
 class Runner(Base):
-    name = "configure"
+    name = "config"
     help = "Configure verifier"
 
     def add_arguments(self):

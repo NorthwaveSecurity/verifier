@@ -1,5 +1,7 @@
 import logging
 from .verify import Runner as Base
+from ..verifier import get_evidence_saver
+from ..issues.base import Evidence, issues
 from ..content_reader import read_content
 from ..verifier import get_issue_ids, get_proxy, verify, export_evidences
 from ..config import config
