@@ -33,7 +33,7 @@ def _run_command(command, stdin="", env=None):
 def run_command(command, visual_command=None, sudo=False, do_prepend_command=True, stdin="", env=None):
     if sudo:
         command = ["sudo"] + command
-    output = _run_command(command, stdin="", env=env)
+    output = _run_command(command, stdin=stdin, env=env)
     if do_prepend_command:
         output = prepend_command(visual_command or command, output, sudo=sudo)
     return output
