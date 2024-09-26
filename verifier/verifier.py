@@ -27,12 +27,13 @@ def print_output(output_str, issue_id=None):
 def get_evidence_host(id, host, lang="en", content=None, extra_args=None, label=None, **kwargs):
     issue = get_issue(id, lang=lang, content=content, extra_args=extra_args, **kwargs)
     if isinstance(host, dict):
-        outputs = issue.verify(**host)
+        evidences = issue.verify(**host)
         host = host['host']
     else:
         evidences = issue.verify(host)
     for evidence in evidences:
-        evidence.id = id
+        evidence.issue = issue
+        evidence.issue_id = id
         evidence.host = host
         evidence.label = label
         evidence.lang = lang
@@ -40,7 +41,7 @@ def get_evidence_host(id, host, lang="en", content=None, extra_args=None, label=
 
 
 def process_evidence(evidence: Evidence, evidence_saver=None):
-    print_output(evidence.output, evidence.id)
+    print_output(evidence.output, evidence.issue_id)
     if evidence_saver:
         evidence_saver.save_evidence(evidence)
 

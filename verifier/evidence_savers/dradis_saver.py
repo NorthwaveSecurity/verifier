@@ -14,9 +14,8 @@ class EvidenceSaver(Base):
         self.dradis = Dradis(api_token, url, trust_env=False)
 
     def save_evidence(self, evidence):
-        issue = get_issue(evidence.id, lang=evidence.lang)
         output = "#[Description]#\n" + evidence.output
-        standard_issue = self.dradis.get_standard_issue(issue.standard_issue_id)
+        standard_issue = self.dradis.get_standard_issue(evidence.issue.standard_issue_id)
         issue =self. dradis.get_issue_by_title(standard_issue['title'], self.args.dradis_project)
         if not issue:
             issue = self.dradis.create_issue(self.args.dradis_project, standard_issue['content'])

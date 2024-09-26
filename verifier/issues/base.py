@@ -7,7 +7,8 @@ from dataclasses import dataclass
 @dataclass
 class Evidence:
     output: str
-    id: int = None
+    issue: 'Issue' = None
+    issue_id: str = None
     host: 'typing.Any' = None
     lang: str = "en"
     label: str = None
@@ -38,6 +39,9 @@ class Issue:
         self.parse_args(self.extra_args)
         if proxy is not None:
             self.handle_proxy(proxy)
+
+    def evidence(self, *args, **kwargs):
+        return Evidence(*args, issue=self, **kwargs)
 
     def verify(self):
         """Should yield Evidences"""
