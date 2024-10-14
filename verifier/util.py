@@ -40,8 +40,14 @@ def run_command(command, visual_command=None, sudo=False, do_prepend_command=Tru
 
 
 def host_to_args(host):
+    """Used for translating hostname to argument for popen.
+    Ignores the port when it is present, since the port argument is module specific."""
     if isinstance(host, str):
-        args = [host]
+        if ':' in host:
+            # handle when port is included.
+            args = [host.split(':')[0]]
+        else:
+            args = [host]
     elif isinstance(host, dict):
         args = host['args']
     elif isinstance(host, list):
@@ -52,10 +58,18 @@ def host_to_args(host):
 
 
 def host_to_url(url, https=True):
-    if https:
-        prefix = "https://"
+    # handle when port is included in URL (and not starts with a protocol handler)
+    if not url.startswith('http') and ":" in url:
+        (host, port) = url.split(":")
+        if int(port) == 443:
+            prefix = "https://"
+        else:
+            prefix = "http://"
     else:
-        prefix = "http://"
+        if https:
+            prefix = "https://"
+        else:
+            prefix = "http://"
     if not url.startswith('http'):
         return prefix + url
     return url

@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from typing import Any
+import typing
 from ..util import prepend_command, run_command, PostProcessingFailed
 from ..config import config
 from collections import defaultdict
