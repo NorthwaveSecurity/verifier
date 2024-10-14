@@ -108,7 +108,6 @@ class IssueDecoder(JSONDecoder):
 
     def object_hook(self, obj):
         try:
-            print(obj)
             if 'issue' in obj:
                 return pickle.loads(base64.b64decode(obj['issue']))
         except:

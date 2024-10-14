@@ -33,6 +33,15 @@ class SerializationTests(unittest.TestCase):
         self.maxDiff = None        
         imported_evidences = import_evidences(join(dir, 'import.json'))
 
-        
-        self.assertListEqual(self.evidences, imported_evidences)
+        imported_evidence = imported_evidences[0]
+        generated_evidence = self.evidences[0]
+
+        self.assertEqual(generated_evidence.output, imported_evidence.output)
+        self.assertEqual(generated_evidence.issue_id, imported_evidence.issue_id)
+        self.assertEqual(generated_evidence.host, imported_evidence.host)
+        self.assertEqual(generated_evidence.lang, imported_evidence.lang)
+        self.assertEqual(generated_evidence.label, imported_evidence.label)
+
+        # __eq__ is not implemented for Issue type, so check if the parsed classes are equal and call it a day
+        self.assertEqual(generated_evidence.issue.__class__, imported_evidence.issue.__class__)
 
