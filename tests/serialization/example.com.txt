@@ -1,0 +1,21 @@
+[request]
+GET / HTTP/1.1
+Host: example.com
+User-Agent: Issue verifier
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+[response]
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+Age: 450814
+Cache-Control: max-age=604800
+Content-Type: text/html; charset=UTF-8
+Date: Tue, 15 Mar 2022 08:14:03 GMT
+Etag: "3147526947+gzip"
+Expires: Tue, 22 Mar 2022 08:14:03 GMT
+Last-Modified: Thu, 17 Oct 2019 07:18:26 GMT
+Server: ECS (nyb/1D34)
+Vary: Accept-Encoding
+X-Cache: HIT
+Content-Length: 648

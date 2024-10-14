@@ -1,7 +1,12 @@
+from collections.abc import Callable
+from typing import Any
 from ..util import prepend_command, run_command, PostProcessingFailed
 from ..config import config
 from collections import defaultdict
+from json import JSONDecoder, JSONEncoder
 from dataclasses import dataclass
+import pickle
+import base64
 
 
 @dataclass
@@ -15,6 +20,12 @@ class Evidence:
 
     def __repr__(self):
         return self.output
+
+
+@dataclass
+class Host:
+    hostname: str = None
+    port: int = None
 
 
 class Issue:
@@ -82,6 +93,28 @@ class Issue:
         return self._standard_issue_path.get(self.language)
 
 
+class IssueEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Issue):
+            return {"issue": base64.b64encode(pickle.dumps(obj)).decode('utf8')}
+        # Let the base class default method raise the TypeError
+        return super().default(obj)
+
+
+class IssueDecoder(JSONDecoder):
+    def __init__(self, **kwargs):
+        kwargs["object_hook"] = self.object_hook
+        super().__init__(**kwargs)
+
+    def object_hook(self, obj):
+        try:
+            print(obj)
+            if 'issue' in obj:
+                return pickle.loads(base64.b64decode(obj['issue']))
+        except:
+            return obj
+
+
 class CommandIssue(Issue):
     proxychains = False
     sudo = False
@@ -124,3 +157,5 @@ def add_expansion(key, issue_list):
     if not issues.get(key) is None:
         Exception(f"An issue with key {key} already exists, expansions cannot override issues")
     expansions[key] = issue_list
+
+

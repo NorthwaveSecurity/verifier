@@ -1,5 +1,5 @@
 import unittest
-from verifier import expand_issue, expand_issues, expansions
+from verifier.verifier import expand_issue, expand_issues, expansions
 
 class ExpansionTest(unittest.TestCase):
 

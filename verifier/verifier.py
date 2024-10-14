@@ -5,7 +5,7 @@ import sys
 import os
 
 from .issues import issues, expansions, get_issue
-from .issues.base import Evidence
+from .issues.base import Evidence, IssueDecoder, IssueEncoder
 from .util import IssueDoesNotExist
 from .evidence_savers import evidence_savers
 
@@ -13,6 +13,9 @@ from .evidence_savers import evidence_savers
 printed_evidence = False
 
 def print_output(output_str, issue_id=None):
+    # Don't print all output in testcases
+    if os.environ.get("VERIFIER_TEST", False):
+        return
     global printed_evidence
     if printed_evidence:
         print('=========================', file=sys.stderr)
@@ -74,12 +77,12 @@ def verify(issues, target, *args, **kwargs):
 
 def export_evidences(evidences, filename):
     with open(filename, 'w') as f:
-        json.dump([asdict(evidence) for evidence in evidences if evidence], f)
+        json.dump([asdict(evidence) for evidence in evidences if evidence], f, cls=IssueEncoder)
 
 
 def import_evidences(filename):
     with open(filename) as f:
-        return [Evidence(**data) for data in json.load(f)]
+        return [Evidence(**data) for data in json.load(f, cls=IssueDecoder)]
 
 
 def get_issue_ids():
