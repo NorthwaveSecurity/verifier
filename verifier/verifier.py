@@ -148,6 +148,8 @@ def get_proxy():
              os.environ.get('HTTP_PROXY', None))
 
 
+# __main__ is defined here as well since VS Code's debugger wants to start verifier
+# from a module and __main__ in __init__.py is not supported.
 if __name__ == "__main__":
     from . import main
     main()
