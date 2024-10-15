@@ -61,7 +61,9 @@ def host_to_url(url, https=True):
     # handle when port is included in URL (and not starts with a protocol handler)
     if not url.startswith('http') and ":" in url:
         (host, port) = url.split(":")
-        if int(port) == 443:
+        https_ports = [443, 8443, 4443]
+
+        if int(port) in https_ports:
             prefix = "https://"
         else:
             prefix = "http://"
