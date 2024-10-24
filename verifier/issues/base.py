@@ -80,6 +80,13 @@ class Issue:
 
     def handle_proxy(self, proxy):
         raise NotImplementedError
+    
+    @classmethod
+    def from_dict(cls, dict):       
+        i = cls(dict["language"])
+        i._standard_issue_path = dict["_standard_issue_path"]
+        i._standard_issue_id = dict["_standard_issue_id"]
+        return i
 
     @property
     def template(self):
@@ -115,10 +122,7 @@ class IssueDecoder(JSONDecoder):
     def object_hook(self, obj):
         try:
             if "_standard_issue_path" in obj and "_standard_issue_id" in obj and "language" in obj:
-                i = Issue(language=obj["language"])
-                i._standard_issue_path = obj["_standard_issue_path"]
-                i._standard_issue_id = obj["_standard_issue_id"]
-                return i
+                return Issue.from_dict(obj)
             else:
                 return obj
         except Exception as e:
