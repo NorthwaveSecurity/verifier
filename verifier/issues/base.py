@@ -97,7 +97,12 @@ class Issue:
 class IssueEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Issue):
-            return {"issue": base64.b64encode(pickle.dumps(obj)).decode('utf8')}
+            i = {
+                "_standard_issue_path": obj._standard_issue_path,
+                "_standard_issue_id": obj._standard_issue_id if obj._standard_issue_id else None,
+                "language": obj.language
+            }
+            return i
         # Let the base class default method raise the TypeError
         return super().default(obj)
 
@@ -109,9 +114,14 @@ class IssueDecoder(JSONDecoder):
 
     def object_hook(self, obj):
         try:
-            if 'issue' in obj:
-                return pickle.loads(base64.b64decode(obj['issue']))
-        except:
+            if "_standard_issue_path" in obj and "_standard_issue_id" in obj and "language" in obj:
+                i = Issue(language=obj["language"])
+                i._standard_issue_path = obj["_standard_issue_path"]
+                i._standard_issue_id = obj["_standard_issue_id"]
+                return i
+            else:
+                return obj
+        except Exception as e:
             return obj
 
 
