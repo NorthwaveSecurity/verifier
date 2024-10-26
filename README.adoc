@@ -232,12 +232,6 @@ class NewIssue(Issue):
 add_issue('new-issue', NewIssue)
 ----
 
-Then in `issues/__init__.py` add a line like the following:
-
-----
-from . import new_issue
-----
-
 == Testing
 
     make tests
