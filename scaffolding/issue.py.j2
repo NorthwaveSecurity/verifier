@@ -1,0 +1,20 @@
+from .base import add_issue, {% if expansion %}add_expansion, {% endif %}{{base}}, Evidence
+
+class {{name}}({{base}}):
+    # This template is later converted to language-specific using self.template
+    _template = {
+        "en": "English template ...",
+    }
+    _standard_issue_id = {
+        # Number of the issue in Dradis Issue Library add-on
+        "en": 1, 
+    }
+
+    def verify(self, host):
+        ...
+        yield Evidence(self.template.format(...))
+
+add_issue('{{tag}}', {{name}})
+{% if expansion %}
+add_expansion('{{expansion}}', ['{{tag}}'])
+{% endif %}
