@@ -1,27 +1,10 @@
-from . import LFI
-from . import session_after_logout
-from . import nuclei
-from . import curl
-from . import outdated_web
-from . import nmap
-from . import missing_header
-from . import dnssec
-from . import server_version
-from . import cors
-from . import http_links
-from . import track_trace
-from . import http
-from . import cookie_flags
-from . import stack_trace
-from . import path_disclosure
-from . import portscan
-from . import sslyze
-from . import scoutsuite
-from . import crackmapexec
-from . import ssh
-from . import amicontained
-from . import bloodhound
-from . import nessus
+# Dynamically import all subpackages
+import pkgutil
+__all__ = []
+for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
+    __all__.append(module_name)
+from . import *
+
 from .base import Issue, CommandIssue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
