@@ -193,7 +193,7 @@ dradis_curl -h
 
 Copy `config.sample.ini` to `config.ini` or `~/.config/verifier.ini` and edit the values
 
-Currently none of the included issues have Dradis support. To add this, add a `_standard_issue_id` attribute to the issue class like the following:
+To add Dradis support to an issue, add a `_standard_issue_id` attribute to the issue class like the following:
 
 ----
 class Issue:
