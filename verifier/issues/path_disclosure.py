@@ -16,7 +16,6 @@ class PathDisclosure(DradisCurlIssue):
     def edit(self, response):
         def edit_function(line):
             for regex in self.path_regexes:
-                print(regex, line)
                 if re.search(regex, line):
                     return highlight(line, regex)
             return False
