@@ -25,6 +25,10 @@ class OutdatedTest(unittest.TestCase):
         content = read_content(os.path.join(dir, 'nginx.txt'))
         print_evidence(get_evidence_host('outdated-nginx', 'example.com', content=content))
 
+    def test_outdated_iis(self):
+        content = read_content(os.path.join(dir, 'iis.txt'))
+        print_evidence(get_evidence_host('outdated-iis', 'example.com', content=content))
+
 
 if __name__ == '__main__':
     unittest.main()

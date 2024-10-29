@@ -27,8 +27,12 @@ class Outdated:
         else:
             return "Verify an outdated version of {}".format(self._software)
 
+    @property
+    def _software_regex(self):
+        return self._software
+
     def edit(self, output):
-        regex = re.compile(rf"{self._software}{self._version_regex}")
+        regex = re.compile(rf"{self._software_regex}{self._version_regex}")
         version_search = re.search(regex, output)
         if not version_search:
             raise IssueDoesNotExist()
@@ -38,8 +42,12 @@ class Outdated:
 
 class NVDLinkMixin:
     @property
+    def vuln_link_software(self):
+        return self._software
+
+    @property
     def vuln_link(self):
-        return f"https://nvd.nist.gov/vuln/search/results?form_type=Advanced&results_type=overview&search_type=all&isCpeNameSearch=false&cpe_version=cpe:/:{self._vendor}:{self._software}:{self._version}"
+        return f"https://nvd.nist.gov/vuln/search/results?form_type=Advanced&results_type=overview&search_type=all&isCpeNameSearch=false&cpe_version=cpe:/:{self._vendor}:{self.vuln_link_software}:{self._version}"
 
 
 class OutdatedWeb(Outdated, Curl):
@@ -69,6 +77,11 @@ class OutdatedNginx(OutdatedHTTPHeader):
     _software = "nginx"
     _vendor = "f5"
 
+class OutdatedIIS(OutdatedHTTPHeader):
+    _software = "IIS"
+    _vendor = "Microsoft"
+    _software_regex = "Microsoft-IIS"
+    vuln_link_software = "internet_information_services"
 
 class OutdatedWordpress(OutdatedWeb):
     _software = "WordPress"
@@ -190,6 +203,7 @@ add_issue('outdated-jquery-ui-dialog', OutdatedJQueryUIDialog)
 add_issue('outdated-modernizr', OutdatedModernizr)
 add_issue('outdated-plupload', OutdatedPLUpload)
 add_issue('outdated-nginx', OutdatedNginx)
+add_issue('outdated-iis', OutdatedIIS)
 add_issue('outdated-vsftpd', OutdatedVSFTPd)
 add_issue('outdated-highcharts', OutdatedHighcharts)
 add_issue('outdated-froala', OutdatedFroala)
