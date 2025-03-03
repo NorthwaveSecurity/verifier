@@ -29,11 +29,16 @@ class EvidenceSaver(Base):
 
     def parse_args(self, args):
         parser = ArgumentParser("Dradis Saver")
+        if 'dradis' in config and 'project_id' in config['dradis']:
+            project_id = config['dradis']['project_id']
+        else:
+            project_id = None
         parser.add_argument(
             "-p",
             "--dradis-project",
-            required=True,
             help="Dradis project to create issue for",
+            required=not project_id,
+            default=project_id
         )
         self.args, extra_args = parser.parse_known_args(args)
         return extra_args

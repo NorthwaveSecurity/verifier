@@ -19,7 +19,7 @@ class DigIssue(CommandIssue):
         new_command += command
         output_str = super().run_command(new_command)
         if "ANSWER: 0" in output_str:
-            print(new_command)
+            print(f"Command executed: {' '.join(new_command)}")
             raise Exception("No answer section, did you provide the correct hostname?")
         return output_str
 
