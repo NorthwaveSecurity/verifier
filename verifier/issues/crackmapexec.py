@@ -27,32 +27,14 @@ bc.. {}
 
 
 class CME_SMB_Signing(CME):
-    header = {
-        "en": "SMB settings",
-    }
-    footer = {
-        "en": "SMB signing is not enforced",
-    }
     triggers = ['signing:False']
 
 
 class CME_SMB_V1(CME):
-    header = {
-        "en": "SMB settings",
-    }
-    footer = {
-        "en": "SMB version 1 is in use",
-    }
     triggers = ['SMBv1:True']
 
 
 class CME_password_policy(CME):
-    header = {
-        "en": "Password policy",
-    }
-    footer = {
-        "en": "a weak password policy is in use",
-    }
 
     def verify(self, target):
         output = self.content['output']
