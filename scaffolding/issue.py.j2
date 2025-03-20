@@ -14,7 +14,7 @@ class {{name}}({{base}}):
         ...
         yield Evidence(self.template.format(...))
 
-add_issue('{{tag}}', {{name}})
+add_issue('{{tag|lower}}', {{name}})
 {% if expansion %}
 add_expansion('{{expansion}}', ['{{tag}}'])
 {% endif %}

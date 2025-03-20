@@ -29,9 +29,13 @@ class CreateRunner(Base):
             "expansion": args.expansion,
             "base": args.base
         }
-        issue_file = env['tag'].replace('-', '_') + ".py"
-        with open(dir.parent.parent / "scaffolding" / "issue.py.j2") as f:
-            t = Template(f.read())
+        issue_file = env['tag'].replace('-', '_').lower() + ".py"
+        try:
+            with open(dir.parent.parent / "scaffolding" / "issue.py.j2") as f:
+                t = Template(f.read())
+        except FileNotFoundError:
+            print("Could not find scaffolding directory, did you install Verifier editable?")
+            raise
         rendered = t.render(**env)
         issue_path = dir.parent / "issues" / issue_file
         if issue_path.exists():
