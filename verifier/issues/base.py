@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any
 import typing
 from ..util import prepend_command, run_command, PostProcessingFailed
+from ..translator import Translator
 from ..config import config
 from collections import defaultdict
 from json import JSONDecoder, JSONEncoder
@@ -29,13 +30,13 @@ class Host:
     port: int = None
 
 
-class Issue:
+class Issue(Translator):
     description = None
     _template = defaultdict(lambda: "{}")
     _standard_issue_path = defaultdict(lambda: None)
 
     def __init__(self, language="en", content=None, extra_args=None, proxy=None):
-        self.language = language
+        super().__init__(language=language)
         if content:
             self.content = content
         else:
@@ -63,7 +64,7 @@ class Issue:
         """
         Override to parse extra aguments
         """
-        pass
+        self.args = args
 
     def postprocess(self, output):
         """
