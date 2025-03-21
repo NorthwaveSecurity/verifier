@@ -83,8 +83,6 @@ class Cookie_Flags_Browser(CookieFlags):
     _template = {
         "en": """The following cookies have been found without the {} flag:
 {}""",
-        "nl": """De volgende cookies zijn gevonden zonder {} flag:
-{}""",
     }
 
     def get_function(self):
@@ -126,8 +124,6 @@ class Cookie_Flags_Browser(CookieFlags):
     cookie_flag = None
     _template = {
         "en": """The following cookies have been found without the {} flag:
-{}""",
-        "nl": """De volgende cookies zijn gevonden zonder {} flag:
 {}""",
     }
 
