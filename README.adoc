@@ -206,6 +206,7 @@ class Issue:
 
 To create a new issue create a new file in the `issues` directory, this file should have content like the following:
 
+[source,python]
 ----
 from .base import add_issue, Issue, Evidence
 
