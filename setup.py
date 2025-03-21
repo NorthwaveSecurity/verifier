@@ -11,11 +11,11 @@ default = dradis + cookie_flags_browser + sslyze
 
 
 setup(name='Verifier',
-      version='1.0',
+      version='1.1',
       description='Automatically verify security issues',
       author='Jan-Jaap Korpershoek',
       author_email='janjaap.korpershoek@northwave.nl',
-      install_requires=['argcomplete', 'requests', 'cachetools', 'packaging'],
+      install_requires=['argcomplete', 'requests', 'cachetools', 'packaging', 'jinja2'],
       entry_points={
         'console_scripts': ['dradis_curl=dradis_curl:main', 'verifier=verifier:main'],
       },
