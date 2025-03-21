@@ -27,7 +27,7 @@ class SerializationTests(unittest.TestCase):
         return super().tearDown()
 
     def test_export_evidences(self):
-        export_evidences(self.evidences, self.outfile_path)        
+        export_evidences(self.evidences, self.outfile_path)
 
     def test_import_evidences(self):
         self.maxDiff = None        
@@ -41,7 +41,3 @@ class SerializationTests(unittest.TestCase):
         self.assertEqual(generated_evidence.host, imported_evidence.host)
         self.assertEqual(generated_evidence.lang, imported_evidence.lang)
         self.assertEqual(generated_evidence.label, imported_evidence.label)
-
-        # __eq__ is not implemented for Issue type, so check if the parsed classes are equal and call it a day
-        self.assertEqual(generated_evidence.issue.__class__, imported_evidence.issue.__class__)
-

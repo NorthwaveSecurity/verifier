@@ -1,0 +1,14 @@
+[
+  {
+    "output": "p. Request:\n\nbc.. GET / HTTP/1.1\r\nHost: example.com\r\nUser-Agent: Issue verifier\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\n\np. Response:\n\nbc.. HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nAge: 450814\r\nCache-Control: max-age=604800\r\nContent-Type: text/html; charset=UTF-8\r\nDate: Tue, 15 Mar 2022 08:14:03 GMT\r\nEtag: \"3147526947+gzip\"\r\nExpires: Tue, 22 Mar 2022 08:14:03 GMT\r\nLast-Modified: Thu, 17 Oct 2019 07:18:26 GMT\r\nServer: ECS (nyb/1D34)\r\nVary: Accept-Encoding\r\nX-Cache: HIT\r\nContent-Length: 648\n\np. Missing header: Strict-Transport-Security.",
+    "issue": {
+      "_standard_issue_path": {},
+      "_standard_issue_id": null,
+      "language": "en"
+    },
+    "issue_id": "strict-transport-security",
+    "host": "example.com",
+    "lang": "en",
+    "label": null
+  }
+]
