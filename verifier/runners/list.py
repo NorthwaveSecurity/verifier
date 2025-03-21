@@ -1,7 +1,7 @@
 from .base import Runner as Base
 from ..verifier import show_issue_list
 
-class Runner(Base):
+class ListRunner(Base):
     name = "list"
     help = "List all supported issues"
 

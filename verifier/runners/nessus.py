@@ -6,7 +6,7 @@ from ..content_reader import read_content
 from ..verifier import get_issue_ids, get_proxy, verify, export_evidences
 from ..config import config
 
-class Runner(Base):
+class NessusRunner(Base):
     name = "nessus"
     help = "Process nessus export"
 

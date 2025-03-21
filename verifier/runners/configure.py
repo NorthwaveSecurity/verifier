@@ -1,7 +1,7 @@
 from .base import Runner as Base
 from ..config import configure
 
-class Runner(Base):
+class ConfigureRunner(Base):
     name = "config"
     help = "Configure verifier"
 

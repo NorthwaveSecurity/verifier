@@ -2,7 +2,7 @@ from .base import Runner as Base
 from ..verifier import get_evidence_saver, import_evidences, process_evidence
 from ..config import config
 
-class Runner(Base):
+class ImportRunner(Base):
     name = "import"
     help = "Import results from file"
 
