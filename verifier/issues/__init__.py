@@ -21,6 +21,7 @@ from . import crackmapexec
 from . import ssh
 from . import amicontained
 from . import bloodhound
+from . import nessus
 from .base import Issue, CommandIssue, expansions, issues, add_issue, add_expansion
 
 add_expansion('all', [
