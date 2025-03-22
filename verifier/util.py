@@ -11,7 +11,9 @@ HIGHLIGHT_END = r"}}$$"
 
 def highlight(string, regex=None):
     if not regex:
-        return HIGHLIGHT_START + string + HIGHLIGHT_END
+        start_whitespace = re.search(r"^\s*", string).group(0)
+        end_whitespace = re.search(r"\s*$", string).group(0)
+        return start_whitespace + HIGHLIGHT_START + string.strip() + HIGHLIGHT_END + end_whitespace
     return re.sub(regex, HIGHLIGHT_START + r"\g<0>" + HIGHLIGHT_END, string)
 
 
