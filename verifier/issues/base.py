@@ -107,7 +107,7 @@ class IssueEncoder(JSONEncoder):
         if isinstance(obj, Issue):
             i = {
                 "_standard_issue_path": obj._standard_issue_path,
-                "_standard_issue_id": obj._standard_issue_id if obj._standard_issue_id else None,
+                "_standard_issue_id": obj._standard_issue_id if hasattr(obj, "_standard_issue_id") else None,
                 "language": obj.language
             }
             return i
