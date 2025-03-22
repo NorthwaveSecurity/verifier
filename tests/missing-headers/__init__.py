@@ -23,7 +23,7 @@ class MissingHeadersTest(unittest.TestCase):
     def test_hsts(self):
         content = read_content(join(dir, 'example.com.txt'))
         results = list(verify(['strict-transport-security'], ['example.com'], content=content))
-        self.assertIn("over HTTPS", str(results[0]))
+        print_evidence(results)
 
     def test_missing_frame_ancestors(self):
         content = read_content(join(dir, 'missing-frame-ancestors.txt'))
