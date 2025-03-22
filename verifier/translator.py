@@ -12,7 +12,10 @@ class Translator:
 
     def t(self, key):
         """ Return text objects in the right language """
-        return self._text[key].get(self.language, key)
+        try:
+            return self._text[key].get(self.language, key)
+        except KeyError:
+            return key
 
     def bool_to_text(self, bool):
         return self.t("true") if bool else self.t("false")
