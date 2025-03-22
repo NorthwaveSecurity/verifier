@@ -113,7 +113,7 @@ class ContentSecurityPolicyUnsafe(ContentSecurityPolicy):
                 yield evidence
             if not self.check_frame_ancestors(response):
                 self.problem = "frame_ancestors"
-                response_str = highlight(str(response), r'Content-Security-Policy:[^\n]+')
+                response_str = highlight(str(response), r'Content-Security-Policy:[^\r\n]+')
                 evidence = Evidence(self.format_template(request, response_str))
                 evidence.problem = self.problem
                 yield evidence
