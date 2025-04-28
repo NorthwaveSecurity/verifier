@@ -1,6 +1,18 @@
 = Verifier
 
-Automatically verify issues
+Automatically generate evidence for a broad range of security issues you might discover during a penetration test.
+The intended workflow is that you determine a vulnerability either manually or through a different tool and then verify the relevant issue using Verifier to add it to your report.
+However, many of the issues in Verifier also have checks to see if the issue is present, which allows for scanner-like behaviour.
+
+We use this tool extensively at Northwave to spend less time on low-hanging fruit vulnerabilities in order to spend more time on vulnerabilities that are harder to find.
+
+Verifier has integrations with https://github.com/dradis/dradis-ce[Dradis] and https://github.com/JJK96/reporter[Reporter] for automatically adding the findings to your reports.
+The issues in Verifier can be linked to issues in your issue library to automatically create these issues in your reporting tool and add the generated evidence to it.
+Verifier is built to be extendable. It should be easy to add your own issues, evidence savers (for integration with reporting tools) and other extensions.
+Currently, the evidence templates in the public version of Verifier are very bare-bones and only support the English language.
+If you want to use this tool for your reports, we recommend that you improve the templates to match the style of your reports.
+
+Verifier supports parsing the output from tools like Curl, Nmap, Dig, NetExec/Crackmapexec, BloodHound, Scoutsuite, etc.
 
 == Setup
 
@@ -62,7 +74,7 @@ The parameter `-p <dradis_project_id>` is then required to indicate the project 
 
 === Reporter support
 
-For use with [Reporter](https://github.com/JJK96/reporter), the config file can be edited to set `evidence_saver = issue-library`.
+For use with https://github.com/JJK96/reporter[Reporter], the config file can be edited to set `evidence_saver = issue-library`.
 In that case, evidences are saved to the current report using the `reporter` library.
 It is required that verifier is run from the report directory.
 
