@@ -1,0 +1,21 @@
+name: Verifier
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt install -y build-essential git curl
+          sudo curl -o /usr/bin/testssl.sh https://raw.githubusercontent.com/testssl/testssl.sh/refs/heads/3.2/testssl.sh
+          sudo chmod +x /usr/bin/testssl.sh
+          pip install -e .[default]
+      - name: Run tests
+        run: make tests
