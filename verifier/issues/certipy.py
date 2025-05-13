@@ -93,7 +93,7 @@ bc.. {}
 
     def format_templates(self):
         header = (x.capitalize() for x in 
-          (f"Template {self.t("name")}", self.t("vulnerabilities"), self.t("enabled"), f"Enrollment {self.t("rights")}")
+          (f"Template {self.t('name')}", self.t('vulnerabilities'), self.t('enabled'), f"Enrollment {self.t('rights')}")
         )
         table = [header]
         for template in self.templates:
@@ -117,7 +117,7 @@ p. {self.t("vulnerable_templates_header")}:
 """
 
     def format_authorities(self):
-        header = (f"CA {self.t("name")}", self.t("vulnerabilities").capitalize())
+        header = (f"CA {self.t('name')}", self.t('vulnerabilities').capitalize())
         table = [header]
         for authority in self.authorities:
             if not authority['vulns']:
