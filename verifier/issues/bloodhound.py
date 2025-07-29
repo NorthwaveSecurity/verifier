@@ -155,7 +155,7 @@ bc.. {}
 
 class AdminLoginsNonDc(Neo4jIssue):
     description = "Check if domain admins are signed in to non-domain controllers"
-    query = "MATCH (n:User)-[:MemberOf]->(g:Group {objectid:'S-1-5-21-1746410392-2068921814-1504938015-512'}) WITH n MATCH p=(c:Computer)-[:HasSession]->(n) where NOT c.name =~ 'DC.*' RETURN p"
+    query = "MATCH (n:User)-[:MemberOf]->(g:Group) WITH n MATCH p=(c:Computer)-[:HasSession]->(n) where g.objectid =~ '(?i)S-1-5-.*-512' and NOT c.name =~ 'DC.*' RETURN p"
     footer = {
         "en": """Last sign in of domain admin to non-domain controller:
 
